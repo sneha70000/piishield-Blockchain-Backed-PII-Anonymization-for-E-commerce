@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: piishield-backend-config
+  namespace: piishield
+data:
+  # The bridge is reached by its Kubernetes Service DNS name, not
+  # localhost, since the backend and bridge run in separate pods.
+  FABRIC_BRIDGE_URL: "http://piishield-bridge:4000"
+  UPLOAD_DIR: "/data/uploads"
+  OUTPUT_DIR: "/data/outputs"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: piishield-bridge-config
+  namespace: piishield
+data:
+  CHANNEL_NAME: "mychannel"
+  CHAINCODE_NAME: "auditledger"
+  BRIDGE_PORT: "4000"
+  # NOTE: this points at the Fabric network's peer/orderer/CA endpoints.
+  # Since Fabric itself runs outside the cluster (via Docker Compose on
+  # the host, not K8s — see README_K8S.md scope note), this uses the
+  # special Kubernetes DNS name that resolves to the host machine.
+  # On Docker Desktop's K8s / minikube this is typically:
+  FABRIC_PEER_ENDPOINT_HOST: "host.docker.internal"

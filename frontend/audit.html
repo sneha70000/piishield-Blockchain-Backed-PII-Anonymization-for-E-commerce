@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PIIShield — Audit Chain</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#f5f6f8;--white:#fff;--border:#e2e5ea;--accent:#16a34a;--accent-light:#f0fdf4;--text:#111827;--muted:#6b7280;--shadow:0 1px 3px rgba(0,0,0,.08);--font:'Inter',sans-serif;--mono:'JetBrains Mono',monospace; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);font-family:var(--font);color:var(--text);}
+  .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow);}
+  .logo{display:flex;align-items:center;gap:10px;}
+  .logo-icon{width:34px;height:34px;background:#16a34a;border-radius:8px;display:flex;align-items:center;justify-content:center;}
+  .logo-icon svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;}
+  .logo-text{font-size:15px;font-weight:700;}
+  .logo-sub{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;}
+  .topbar-right{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted);}
+  .badge{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;}
+  .btn-back{background:none;border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:12px;color:var(--muted);cursor:pointer;font-family:var(--font);}
+  .btn-back:hover{border-color:#16a34a;color:#16a34a;}
+  .content{padding:28px 32px;max-width:1000px;margin:0 auto;}
+  .card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px;box-shadow:var(--shadow);}
+  .card-title{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:14px;}
+  .chain-valid{color:#16a34a;font-weight:600;font-size:13px;}
+  .chain-invalid{color:#dc2626;font-weight:600;font-size:13px;}
+  .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
+  .stat{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px 20px;box-shadow:var(--shadow);}
+  .stat-value{font-size:26px;font-weight:700;font-family:var(--mono);color:#16a34a;}
+  .stat-label{font-size:12px;color:var(--muted);margin-top:4px;}
+  .block{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:flex-start;gap:14px;box-shadow:var(--shadow);}
+  .block-index{font-family:var(--mono);font-size:11px;color:#16a34a;background:#f0fdf4;border-radius:4px;padding:2px 7px;flex-shrink:0;border:1px solid #bbf7d0;}
+  .block-action{font-weight:600;font-size:13px;}
+  .block-hash{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:4px;word-break:break-all;}
+  .block-time{font-size:11px;color:var(--muted);margin-top:2px;}
+  .badge-pii{background:#eff4ff;color:#1a56db;border:1px solid #c7d9f8;border-radius:20px;padding:2px 8px;font-size:11px;font-weight:600;}
+  .badge-method{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0;border-radius:20px;padding:2px 8px;font-size:11px;font-weight:600;margin-left:4px;}
+  .loader{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:#16a34a;border-radius:50%;animation:spin .7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .empty{text-align:center;padding:40px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></div>
+    <div><div class="logo-text">Audit Chain</div><div class="logo-sub">PIIShield</div></div>
+  </div>
+  <div class="topbar-right">
+    <span id="user-name" class="badge">Auditor</span>
+    <button class="btn-back" onclick="window.location.href='hub.html'">Back to hub</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="stat-row">
+    <div class="stat"><div class="stat-value" id="s-blocks">—</div><div class="stat-label">Total blocks</div></div>
+    <div class="stat"><div class="stat-value" id="s-valid" style="color:#111827">—</div><div class="stat-label">Chain integrity</div></div>
+    <div class="stat"><div class="stat-value" id="s-datasets">—</div><div class="stat-label">Datasets processed</div></div>
+  </div>
+
+  <div class="card" id="verify-card">
+    <div class="card-title">Chain verification</div>
+    <div id="verify-status"><span class="loader"></span> Verifying chain...</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Blockchain audit log</div>
+    <div id="blocks-container"><div class="empty"><span class="loader"></span> Loading blocks...</div></div>
+  </div>
+</div>
+
+<script>
+const API = 'http://172.28.236.73:8000/api';
+if (sessionStorage.getItem('piishield_authenticated') !== 'true') window.location.href = 'login.html';
+document.getElementById('user-name').textContent = sessionStorage.getItem('piishield_user') || 'Auditor';
+
+const TOKEN = sessionStorage.getItem('piishield_token');
+async function api(path) {
+  const r = await fetch(API + path, { headers: { 'X-API-Key': TOKEN } });
+  if (r.status === 401) { sessionStorage.clear(); window.location.href = 'login.html'; throw new Error('session expired'); }
+  return r.json();
+}
+
+function fmtDate(d) { return d ? new Date(d).toLocaleString() : '—'; }
+
+async function load() {
+  try {
+    const verify = await api('/audit/verify');
+    document.getElementById('s-blocks').textContent = verify.total_blocks ?? 0;
+    document.getElementById('s-valid').textContent = verify.valid ? 'Valid' : 'Broken';
+    document.getElementById('s-valid').style.color = verify.valid ? '#16a34a' : '#dc2626';
+    document.getElementById('verify-status').innerHTML = verify.valid
+      ? `<span class="chain-valid">All ${verify.total_blocks} blocks verified — chain integrity confirmed</span>`
+      : `<span class="chain-invalid">Chain broken at block ${verify.broken_at ?? '?'}</span>`;
+
+    const datasets = await api('/datasets');
+    document.getElementById('s-datasets').textContent = datasets.length;
+
+    let chain = [];
+    for (const d of datasets) {
+      const r = await api(`/audit/${d.id}`).catch(() => ({ blocks: [] }));
+      for (const b of (r.blocks || [])) {
+        if (!chain.find(c => c.index === b.index)) chain.push(b);
+      }
+    }
+    chain.sort((a, b) => b.index - a.index);
+
+    const container = document.getElementById('blocks-container');
+    if (!chain.length) { container.innerHTML = '<div class="empty">No blocks yet. Process a dataset first.</div>'; return; }
+
+    container.innerHTML = chain.map(b => `
+      <div class="block">
+        <div class="block-index">#${b.index}</div>
+        <div style="flex:1;min-width:0">
+          <div class="block-action">${b.action} <span style="font-weight:400;font-size:12px;color:var(--muted)">· dataset #${b.dataset_id}</span></div>
+          ${b.pii_type ? `<div style="margin-top:5px">
+            <span class="badge-pii">${b.pii_type}</span>
+            ${b.anonymisation_method ? `<span class="badge-method">${b.anonymisation_method}</span>` : ''}
+            <span style="font-size:11px;color:var(--muted);margin-left:6px">${b.records_affected} records</span>
+          </div>` : ''}
+          <div class="block-hash" style="margin-top:5px">${b.block_hash}</div>
+          <div class="block-time">prev: ${b.previous_hash?.substring(0, 32)}...</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);white-space:nowrap">${fmtDate(b.timestamp)}</div>
+      </div>`).join('');
+  } catch(e) {
+    document.getElementById('verify-status').textContent = 'Could not connect to API. Is the server running?';
+  }
+}
+
+load();
+</script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: piishield_db
+    environment:
+      POSTGRES_DB: piishield_db
+      POSTGRES_USER: piishield
+      POSTGRES_PASSWORD: piishield123
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: piishield_backend
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://piishield:piishield123@db:5432/piishield_db
+      SECRET_KEY: piishield-super-secret-key-change-in-production
+      AES_KEY: piishield-aes-256-encryption-key!!
+      UPLOAD_DIR: /app/data/uploads
+      OUTPUT_DIR: /app/data/outputs
+      BLOCKCHAIN_LOG: /app/data/blockchain_log.json
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+
+  frontend:
+    image: nginx:alpine
+    container_name: piishield_frontend
+    ports:
+      - "3000:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+
+volumes:
+  pgdata:

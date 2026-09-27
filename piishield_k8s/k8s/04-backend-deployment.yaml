@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: piishield-data
+  namespace: piishield
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: piishield-backend
+  namespace: piishield
+  labels:
+    app: piishield-backend
+spec:
+  replicas: 2   # the backend is stateless per-request (state lives in the
+                # SQLite/Postgres DB and the Fabric ledger), so it can be
+                # horizontally scaled behind the Service
+  selector:
+    matchLabels:
+      app: piishield-backend
+  template:
+    metadata:
+      labels:
+        app: piishield-backend
+    spec:
+      containers:
+        - name: backend
+          image: piishield-backend:latest   # build via backend/Dockerfile
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: piishield-backend-config
+          volumeMounts:
+            - name: piishield-data
+              mountPath: /app/data
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"   # transformers/torch (BERT NER) needs headroom
+      volumes:
+        - name: piishield-data
+          persistentVolumeClaim:
+            claimName: piishield-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: piishield-backend
+  namespace: piishield
+spec:
+  selector:
+    app: piishield-backend
+  ports:
+    - port: 8000
+      targetPort: 8000
+  type: ClusterIP

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PIIShield — Analytics</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root{--bg:#f5f6f8;--white:#fff;--border:#e2e5ea;--accent:#7c3aed;--accent-light:#faf5ff;--text:#111827;--muted:#6b7280;--shadow:0 1px 3px rgba(0,0,0,.08);--font:'Inter',sans-serif;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);font-family:var(--font);color:var(--text);}
+  .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow);}
+  .logo{display:flex;align-items:center;gap:10px;}
+  .logo-icon{width:34px;height:34px;background:#7c3aed;border-radius:8px;display:flex;align-items:center;justify-content:center;}
+  .logo-icon svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;}
+  .logo-text{font-size:15px;font-weight:700;}
+  .logo-sub{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;}
+  .badge{background:#faf5ff;color:#6d28d9;border:1px solid #ddd6fe;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;}
+  .btn-back{background:none;border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:12px;color:var(--muted);cursor:pointer;font-family:var(--font);}
+  .btn-back:hover{border-color:#7c3aed;color:#7c3aed;}
+  .content{padding:28px 32px;max-width:1200px;margin:0 auto;}
+  .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px;}
+  .stat{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px 20px;box-shadow:var(--shadow);}
+  .stat-value{font-size:26px;font-weight:700;color:#7c3aed;}
+  .stat-label{font-size:12px;color:var(--muted);margin-top:4px;}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+  .card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;box-shadow:var(--shadow);margin-bottom:16px;}
+  .card-title{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:16px;}
+  .notice{background:#faf5ff;border:1px solid #ddd6fe;border-radius:8px;padding:12px 16px;font-size:13px;color:#5b21b6;margin-bottom:20px;display:flex;gap:10px;align-items:center;}
+  .tbl{width:100%;border-collapse:collapse;font-size:13px;}
+  .tbl th{text-align:left;padding:9px 12px;color:var(--muted);font-weight:500;border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;background:#f9fafb;}
+  .tbl td{padding:9px 12px;border-bottom:1px solid var(--border);}
+  .tbl tr:last-child td{border-bottom:none;}
+  .tbl tr:hover td{background:#f9fafb;}
+  .loader{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:#7c3aed;border-radius:50%;animation:spin .7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .pii-hidden{background:#fef3c7;color:#92400e;border-radius:4px;padding:1px 7px;font-size:11px;font-weight:600;}
+
+  /* Dataset cards */
+  .dataset-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:16px;}
+  .dataset-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:18px;box-shadow:var(--shadow);cursor:pointer;transition:all .2s;}
+  .dataset-card:hover{border-color:#7c3aed;box-shadow:0 4px 16px rgba(124,58,237,.12);transform:translateY(-2px);}
+  .dataset-card h3{font-size:13px;font-weight:600;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .dataset-card .meta{font-size:11px;color:var(--muted);margin-bottom:12px;}
+  .ds-stat{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--border);}
+  .ds-stat:last-child{border-bottom:none;}
+  .ds-stat-val{font-weight:600;color:#7c3aed;}
+  .view-btn{width:100%;margin-top:12px;padding:8px;background:#7c3aed;color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);}
+  .view-btn:hover{background:#6d28d9;}
+
+  /* Detail view */
+  .detail-view{display:none;}
+  .detail-view.active{display:block;}
+  .overview.hidden{display:none;}
+  .back-btn{display:flex;align-items:center;gap:6px;background:none;border:1px solid var(--border);border-radius:6px;padding:7px 14px;font-size:12px;color:var(--muted);cursor:pointer;font-family:var(--font);margin-bottom:20px;}
+  .back-btn:hover{border-color:#7c3aed;color:#7c3aed;}
+
+  /* Charts */
+  .chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+  .chart-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;box-shadow:var(--shadow);}
+  .chart-card canvas{max-height:240px;}
+
+  /* Summary box */
+  .summary-box{background:linear-gradient(135deg,#faf5ff,#ede9fe);border:1px solid #ddd6fe;border-radius:8px;padding:20px;margin-bottom:16px;}
+  .summary-box h3{font-size:14px;font-weight:700;color:#5b21b6;margin-bottom:10px;}
+  .summary-box p{font-size:13px;color:#6b7280;line-height:1.7;}
+  .summary-box .highlight{color:#7c3aed;font-weight:600;}
+
+  /* PII type bar */
+  .pii-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+  .pii-bar-label{font-size:12px;color:var(--text);width:120px;flex-shrink:0;}
+  .pii-bar-wrap{flex:1;background:#f3f4f6;border-radius:4px;height:8px;overflow:hidden;}
+  .pii-bar-fill{height:100%;border-radius:4px;background:#7c3aed;}
+  .pii-bar-count{font-size:11px;color:var(--muted);width:50px;text-align:right;}
+
+  @media(max-width:720px){.chart-grid,.stat-row,.grid-2{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+    <div><div class="logo-text">Analytics Dashboard</div><div class="logo-sub">Anonymised data only</div></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <span id="user-name" class="badge">Data Scientist</span>
+    <button class="btn-back" onclick="window.location.href='hub.html'">Back to hub</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="notice">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L4 6v6c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V6L12 2z"/></svg>
+    You are viewing <strong>anonymised data only</strong>. Raw PII data is never shown here. Click any dataset to see its charts and summary.
+  </div>
+
+  <!-- Overview -->
+  <div class="overview" id="overview">
+    <div class="stat-row">
+      <div class="stat"><div class="stat-value" id="s-datasets">—</div><div class="stat-label">Datasets processed</div></div>
+      <div class="stat"><div class="stat-value" id="s-rows">—</div><div class="stat-label">Total records</div></div>
+      <div class="stat"><div class="stat-value" id="s-pii">—</div><div class="stat-label">PII fields protected</div></div>
+      <div class="stat"><div class="stat-value" id="s-blocks">—</div><div class="stat-label">Audit blocks</div></div>
+    </div>
+
+    <!-- Global charts -->
+    <div class="chart-grid">
+      <div class="chart-card">
+        <div class="card-title">PII types detected (all datasets)</div>
+        <canvas id="piiTypeChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="card-title">Anonymisation methods used</div>
+        <canvas id="methodChart"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Datasets — click to view charts</div>
+      <div id="dataset-cards"><span class="loader"></span> Loading...</div>
+    </div>
+  </div>
+
+  <!-- Detail view -->
+  <div class="detail-view" id="detail-view">
+    <button class="back-btn" onclick="showOverview()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to all datasets
+    </button>
+
+    <div class="summary-box" id="detail-summary"></div>
+
+    <div class="chart-grid">
+      <div class="chart-card">
+        <div class="card-title">PII types detected</div>
+        <canvas id="detailPiiChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="card-title">Anonymisation method breakdown</div>
+        <canvas id="detailMethodChart"></canvas>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Sensitive vs non-sensitive columns</div>
+        <canvas id="sensitiveChart" style="max-height:200px"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">PII fields by column</div>
+        <div id="pii-bars"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Detection results (no raw data shown)</div>
+      <table class="tbl">
+        <thead><tr><th>Column</th><th>PII type</th><th>Method</th><th>Records affected</th><th>Status</th></tr></thead>
+        <tbody id="detail-table"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'http://172.28.236.73:8000/api';
+if (sessionStorage.getItem('piishield_authenticated') !== 'true') window.location.href = 'login.html';
+document.getElementById('user-name').textContent = sessionStorage.getItem('piishield_user') || 'Data Scientist';
+const TOKEN = sessionStorage.getItem('piishield_token') || '';
+
+let globalDatasets = [];
+let chartInstances = {};
+
+function destroyChart(id) {
+  if (chartInstances[id]) { chartInstances[id].destroy(); delete chartInstances[id]; }
+}
+
+async function api(path) {
+  const r = await fetch(API + path, { headers: { 'X-API-Key': TOKEN } });
+  if (r.status === 401) { sessionStorage.clear(); window.location.href = 'login.html'; throw new Error('session expired'); }
+  return r.json();
+}
+
+const COLORS = ['#7c3aed','#06b6d4','#10b981','#f59e0b','#ef4444','#3b82f6','#ec4899','#8b5cf6','#14b8a6','#f97316'];
+
+async function load() {
+  try {
+    const [datasets, stats, verify] = await Promise.all([
+      api('/datasets'),
+      api('/stats'),
+      api('/audit/verify')
+    ]);
+
+    globalDatasets = datasets.filter(d => d.status === 'completed');
+
+    document.getElementById('s-datasets').textContent = globalDatasets.length;
+    document.getElementById('s-rows').textContent = datasets.reduce((s,d)=>s+(d.total_rows||0),0).toLocaleString();
+    document.getElementById('s-pii').textContent = (stats.total_pii_detections ?? 0).toLocaleString();
+    document.getElementById('s-blocks').textContent = verify.total_blocks ?? 0;
+
+    // Load all detections for global charts
+    let allPiiTypes = {}, allMethods = {};
+    for (const d of globalDatasets) {
+      try {
+        const r = await api(`/results/${d.id}`);
+        (r.detections || []).forEach(det => {
+          allPiiTypes[det.pii_type] = (allPiiTypes[det.pii_type]||0) + (det.count||0);
+          allMethods[det.method] = (allMethods[det.method]||0) + 1;
+        });
+      } catch {}
+    }
+
+    // Global PII type chart
+    destroyChart('piiTypeChart');
+    const piiKeys = Object.keys(allPiiTypes).sort((a,b)=>allPiiTypes[b]-allPiiTypes[a]);
+    if (piiKeys.length > 0) {
+      chartInstances['piiTypeChart'] = new Chart(document.getElementById('piiTypeChart'), {
+        type: 'bar',
+        data: {
+          labels: piiKeys,
+          datasets: [{ data: piiKeys.map(k=>allPiiTypes[k]), backgroundColor: COLORS, borderRadius: 4 }]
+        },
+        options: { plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}, responsive:true }
+      });
+    }
+
+    // Global method chart
+    destroyChart('methodChart');
+    const methodKeys = Object.keys(allMethods);
+    if (methodKeys.length > 0) {
+      chartInstances['methodChart'] = new Chart(document.getElementById('methodChart'), {
+        type: 'doughnut',
+        data: {
+          labels: methodKeys,
+          datasets: [{ data: methodKeys.map(k=>allMethods[k]), backgroundColor: COLORS }]
+        },
+        options: { plugins:{legend:{position:'bottom'}}, responsive:true }
+      });
+    }
+
+    // Dataset cards
+    const container = document.getElementById('dataset-cards');
+    if (globalDatasets.length === 0) {
+      container.innerHTML = '<p style="color:var(--muted);font-size:13px">No completed datasets yet. Process one from the Admin panel first.</p>';
+      return;
+    }
+    container.innerHTML = `<div class="dataset-grid">${globalDatasets.map(d=>`
+      <div class="dataset-card" onclick="showDetail(${d.id})">
+        <h3>${d.filename}</h3>
+        <div class="meta">Completed · ${new Date(d.uploaded_at).toLocaleDateString()}</div>
+        <div class="ds-stat"><span>Total records</span><span class="ds-stat-val">${d.total_rows?.toLocaleString()}</span></div>
+        <div class="ds-stat"><span>PII fields protected</span><span class="ds-stat-val">${d.pii_detected?.toLocaleString()}</span></div>
+        <div class="ds-stat"><span>Status</span><span class="ds-stat-val" style="color:#10b981">Anonymised</span></div>
+        <button class="view-btn">View charts & summary</button>
+      </div>`).join('')}</div>`;
+
+  } catch(e) {
+    console.error(e);
+    document.getElementById('dataset-cards').textContent = 'Could not connect to API.';
+  }
+}
+
+async function showDetail(id) {
+  document.getElementById('overview').classList.add('hidden');
+  document.getElementById('detail-view').classList.add('active');
+
+  const dataset = globalDatasets.find(d => d.id === id);
+  if (!dataset) return;
+
+  // Summary box
+  document.getElementById('detail-summary').innerHTML = `
+    <h3>Dataset Summary — ${dataset.filename}</h3>
+    <p>
+      This dataset contains <span class="highlight">${dataset.total_rows?.toLocaleString()} records</span> and 
+      <span class="highlight">${dataset.pii_detected?.toLocaleString()} PII fields</span> have been protected through anonymisation.
+      All sensitive personal information has been masked, hashed, or encrypted before this view.
+      No raw or anonymised values are displayed here — only statistical insights are shown.
+    </p>`;
+
+  try {
+    const result = await api(`/results/${id}`);
+    const detections = result.detections || [];
+
+    // PII types chart
+    const piiTypes = {};
+    const methods = {};
+    detections.forEach(d => {
+      piiTypes[d.pii_type] = (piiTypes[d.pii_type]||0) + (d.count||0);
+      methods[d.method] = (methods[d.method]||0) + 1;
+    });
+
+    destroyChart('detailPiiChart');
+    const piiKeys = Object.keys(piiTypes);
+    chartInstances['detailPiiChart'] = new Chart(document.getElementById('detailPiiChart'), {
+      type: 'bar',
+      data: {
+        labels: piiKeys,
+        datasets: [{ label: 'Records', data: piiKeys.map(k=>piiTypes[k]), backgroundColor: COLORS, borderRadius: 4 }]
+      },
+      options: { plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}, responsive:true }
+    });
+
+    // Method chart
+    destroyChart('detailMethodChart');
+    const methodKeys = Object.keys(methods);
+    chartInstances['detailMethodChart'] = new Chart(document.getElementById('detailMethodChart'), {
+      type: 'doughnut',
+      data: {
+        labels: methodKeys,
+        datasets: [{ data: methodKeys.map(k=>methods[k]), backgroundColor: COLORS }]
+      },
+      options: { plugins:{legend:{position:'bottom'}}, responsive:true }
+    });
+
+    // Sensitive vs non-sensitive
+    destroyChart('sensitiveChart');
+    const sensitiveCount = detections.length;
+    const totalCols = result.all_columns ? Object.keys(result.all_columns).length : detections.length + 3;
+    const nonSensitive = Math.max(0, totalCols - sensitiveCount);
+    chartInstances['sensitiveChart'] = new Chart(document.getElementById('sensitiveChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Sensitive (PII)', 'Non-Sensitive'],
+        datasets: [{ data: [sensitiveCount, nonSensitive], backgroundColor: ['#ef4444','#10b981'] }]
+      },
+      options: { plugins:{legend:{position:'bottom'}}, responsive:true }
+    });
+
+    // PII bars
+    const maxCount = Math.max(...detections.map(d=>d.count||0), 1);
+    document.getElementById('pii-bars').innerHTML = detections.map(d=>`
+      <div class="pii-bar-row">
+        <div class="pii-bar-label">${d.column}</div>
+        <div class="pii-bar-wrap"><div class="pii-bar-fill" style="width:${((d.count||0)/maxCount*100).toFixed(1)}%"></div></div>
+        <div class="pii-bar-count">${(d.count||0).toLocaleString()}</div>
+      </div>`).join('');
+
+    // Detection table — no raw data
+    document.getElementById('detail-table').innerHTML = detections.map(d=>`
+      <tr>
+        <td style="font-family:monospace;font-size:12px">${d.column}</td>
+        <td><span style="background:#faf5ff;color:#6d28d9;border:1px solid #ddd6fe;border-radius:20px;padding:2px 8px;font-size:11px;font-weight:600">${d.pii_type}</span></td>
+        <td><span style="background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0;border-radius:20px;padding:2px 8px;font-size:11px;font-weight:600">${d.method}</span></td>
+        <td style="font-weight:600;color:#7c3aed">${(d.count||0).toLocaleString()}</td>
+        <td><span style="color:#10b981;font-weight:600">Protected</span></td>
+      </tr>`).join('');
+
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+function showOverview() {
+  document.getElementById('overview').classList.remove('hidden');
+  document.getElementById('detail-view').classList.remove('active');
+  ['detailPiiChart','detailMethodChart','sensitiveChart'].forEach(destroyChart);
+}
+
+load();
+</script>
+</body>
+</html>

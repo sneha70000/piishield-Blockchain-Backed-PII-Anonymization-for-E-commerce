@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+transformers
+torch
+pandas
+sqlalchemy
+cryptography
+python-multipart
+python-jose
+passlib
+bcrypt
+aiofiles
+python-dotenv
+pydantic
+pydantic-settings

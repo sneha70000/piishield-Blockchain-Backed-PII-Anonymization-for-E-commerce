@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: piishield-ingress
+  namespace: piishield
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: piishield.local   # add to /etc/hosts for local testing:
+                               # 127.0.0.1  piishield.local
+      http:
+        paths:
+          - path: /api(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: piishield-backend
+                port:
+                  number: 8000
+          - path: /(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: piishield-frontend
+                port:
+                  number: 80

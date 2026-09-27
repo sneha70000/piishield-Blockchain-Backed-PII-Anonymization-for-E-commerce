@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PIIShield — Workspace Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f6f8; --white: #ffffff; --border: #e2e5ea;
+    --accent: #1a56db; --accent-hover: #1648c0; --accent-light: #eff4ff;
+    --green: #16a34a; --green-light: #f0fdf4; --green-border: #bbf7d0;
+    --purple: #7c3aed; --purple-light: #faf5ff; --purple-border: #ddd6fe;
+    --text: #111827; --muted: #6b7280;
+    --shadow: 0 1px 3px rgba(0,0,0,.08);
+    --shadow-lg: 0 8px 28px rgba(0,0,0,.10);
+    --font: 'Inter', system-ui, sans-serif;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); font-family: var(--font); color: var(--text); min-height: 100vh; }
+
+  /* Topbar */
+  .topbar { background: var(--white); border-bottom: 1px solid var(--border); padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow); }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-icon { width: 36px; height: 36px; background: var(--accent); border-radius: 9px; display: flex; align-items: center; justify-content: center; }
+  .logo-icon svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; }
+  .logo-text { font-size: 15px; font-weight: 700; }
+  .logo-sub  { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .user-chip { display: flex; align-items: center; gap: 8px; background: #f9fafb; border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px 5px 8px; font-size: 13px; }
+  .avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+  .role-pill { font-size: 10px; font-weight: 600; padding: 1px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: .4px; }
+  .role-admin    { background: var(--accent-light); color: var(--accent); border: 1px solid #c7d9f8; }
+  .role-auditor  { background: var(--green-light); color: var(--green); border: 1px solid var(--green-border); }
+  .role-analyst  { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); }
+  .btn-logout { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; font-size: 12px; color: var(--muted); cursor: pointer; font-family: var(--font); transition: all .15s; }
+  .btn-logout:hover { border-color: #dc2626; color: #dc2626; }
+
+  /* Page */
+  .page { max-width: 1080px; margin: 0 auto; padding: 52px 28px; }
+  .page-header { text-align: center; margin-bottom: 48px; }
+  .page-header h1 { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+  .page-header p { color: var(--muted); font-size: 14px; }
+
+  /* Grid */
+  .hub-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+
+  /* Card */
+  .hub-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 30px 26px;
+    text-align: center; box-shadow: var(--shadow);
+    cursor: pointer; transition: all .2s; position: relative; overflow: hidden;
+  }
+  .hub-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    transition: opacity .2s;
+  }
+  .hub-card.admin-card::before  { background: var(--accent); }
+  .hub-card.audit-card::before  { background: var(--green); }
+  .hub-card.analytics-card::before { background: var(--purple); }
+  .hub-card:not(.locked):hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+  .hub-card.locked { opacity: .5; cursor: not-allowed; }
+  .hub-card.locked:hover { transform: none; box-shadow: var(--shadow); }
+
+  .card-icon { width: 62px; height: 62px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
+  .card-icon svg { width: 28px; height: 28px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .icon-admin     { background: var(--accent-light); }
+  .icon-admin svg { stroke: var(--accent); }
+  .icon-audit     { background: var(--green-light); }
+  .icon-audit svg { stroke: var(--green); }
+  .icon-analytics { background: var(--purple-light); }
+  .icon-analytics svg { stroke: var(--purple); }
+
+  .hub-card h2 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .hub-card p  { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 18px; }
+
+  .features { list-style: none; text-align: left; margin-bottom: 22px; }
+  .features li { font-size: 12px; color: var(--muted); padding: 3px 0; display: flex; align-items: center; gap: 8px; }
+  .features li::before { content: ''; width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+  .admin-card .features li::before    { background: var(--accent); }
+  .audit-card .features li::before    { background: var(--green); }
+  .analytics-card .features li::before { background: var(--purple); }
+
+  .btn-enter { width: 100%; padding: 10px; border-radius: 8px; border: none; font-size: 13px; font-weight: 600; font-family: var(--font); cursor: pointer; transition: all .15s; }
+  .btn-admin     { background: var(--accent); color: #fff; }
+  .btn-admin:hover:not(:disabled)     { background: var(--accent-hover); }
+  .btn-audit     { background: var(--green); color: #fff; }
+  .btn-audit:hover:not(:disabled)     { background: #15803d; }
+  .btn-analytics { background: var(--purple); color: #fff; }
+  .btn-analytics:hover:not(:disabled) { background: #6d28d9; }
+  .btn-enter:disabled { opacity: .45; cursor: not-allowed; }
+
+  /* Status badge */
+  .status-badge { position: absolute; top: 14px; right: 14px; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; letter-spacing: .3px; }
+  .badge-access  { background: var(--green-light); color: var(--green); border: 1px solid var(--green-border); }
+  .badge-locked  { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+  .badge-denied  { background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; }
+
+  /* Modal */
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.3); z-index: 100; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+  .overlay.open { display: flex; }
+  .modal { background: var(--white); border-radius: var(--radius); padding: 36px 32px; width: 380px; box-shadow: 0 20px 50px rgba(0,0,0,.15); animation: popIn .2s ease; }
+  @keyframes popIn { from{transform:scale(.93);opacity:0} to{transform:none;opacity:1} }
+  .modal-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+  .modal h3 { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 4px; }
+  .modal .modal-sub { font-size: 12px; color: var(--muted); text-align: center; margin-bottom: 22px; }
+  .modal label { display: block; font-size: 12px; font-weight: 500; margin-bottom: 5px; }
+  .modal input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; font-family: var(--font); outline: none; transition: border-color .15s; }
+  .modal input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,86,219,.1); }
+  .modal-error { color: #dc2626; font-size: 12px; margin-top: 8px; min-height: 16px; }
+  .modal-btns { display: flex; gap: 10px; margin-top: 18px; }
+  .modal-btns button { flex: 1; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 600; font-family: var(--font); cursor: pointer; transition: all .15s; border: none; }
+  .btn-cancel  { background: #f9fafb; color: var(--text); border: 1px solid var(--border) !important; }
+  .btn-cancel:hover { border-color: var(--accent) !important; color: var(--accent); }
+  .btn-ok-admin     { background: var(--accent); color: #fff; }
+  .btn-ok-admin:hover { background: var(--accent-hover); }
+  .btn-ok-audit     { background: var(--green); color: #fff; }
+  .btn-ok-audit:hover { background: #15803d; }
+  .btn-ok-analytics { background: var(--purple); color: #fff; }
+  .btn-ok-analytics:hover { background: #6d28d9; }
+
+  /* Toast */
+  .toast { position: fixed; bottom: 24px; right: 24px; z-index: 200; background: var(--white); border: 1px solid var(--border); border-left: 3px solid #dc2626; border-radius: 8px; padding: 12px 16px; font-size: 13px; box-shadow: var(--shadow-lg); animation: slideIn .2s ease; }
+  @keyframes slideIn { from{transform:translateX(40px);opacity:0} to{transform:none;opacity:1} }
+
+  @media(max-width:720px) { .hub-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M12 2L4 6v6c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V6L12 2z"/></svg></div>
+    <div><div class="logo-text">PIIShield</div><div class="logo-sub">Privacy Compliance · VCET 2025-26</div></div>
+  </div>
+  <div class="topbar-right">
+    <div class="user-chip">
+      <div class="avatar" id="avatar">?</div>
+      <span id="user-display">User</span>
+      <span class="role-pill" id="role-pill">—</span>
+    </div>
+    <button class="btn-logout" onclick="logout()">Sign out</button>
+  </div>
+</div>
+
+<div class="page">
+  <div class="page-header">
+    <h1>Select workspace</h1>
+    <p>Each workspace requires a password. Your role determines which workspaces you can access.</p>
+  </div>
+
+  <div class="hub-grid">
+
+    <!-- Admin -->
+    <div class="hub-card admin-card" id="card-admin">
+      <div class="status-badge badge-access" id="badge-admin">ACCESS</div>
+      <div class="card-icon icon-admin">
+        <svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><circle cx="12" cy="12" r="2"/><path d="M6 7V5a2 2 0 012-2h8a2 2 0 012 2v2"/></svg>
+      </div>
+      <h2>Admin Panel</h2>
+      <p>Full system access — upload datasets, detect and anonymise PII, manage all data.</p>
+      <ul class="features">
+        <li>Upload and manage datasets</li>
+        <li>Run PII detection and anonymisation</li>
+        <li>View original and anonymised data</li>
+        <li>Download anonymised files</li>
+        <li>Full blockchain access</li>
+      </ul>
+      <button class="btn-enter btn-admin" id="btn-admin" onclick="tryEnter('admin')">Enter Admin Panel</button>
+    </div>
+
+    <!-- Audit -->
+    <div class="hub-card audit-card" id="card-audit">
+      <div class="status-badge badge-locked" id="badge-audit">RESTRICTED</div>
+      <div class="card-icon icon-audit">
+        <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+      </div>
+      <h2>Audit Chain</h2>
+      <p>Verify blockchain records, confirm anonymisation happened, check chain integrity.</p>
+      <ul class="features">
+        <li>View all blockchain blocks</li>
+        <li>Verify chain integrity (SHA-256)</li>
+        <li>Check timestamps and hashes</li>
+        <li>Confirm anonymisation records</li>
+        <li>Read-only — cannot modify</li>
+      </ul>
+      <button class="btn-enter btn-audit" id="btn-audit" onclick="tryEnter('audit')">Enter Audit Chain</button>
+    </div>
+
+    <!-- Analytics -->
+    <div class="hub-card analytics-card" id="card-analytics">
+      <div class="status-badge badge-locked" id="badge-analytics">RESTRICTED</div>
+      <div class="card-icon icon-analytics">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <h2>Analytics</h2>
+      <p>Analyse anonymised data only. Business insights without any personal customer information.</p>
+      <ul class="features">
+        <li>Anonymised datasets only</li>
+        <li>PII columns hidden</li>
+        <li>Sales and category reports</li>
+        <li>Dataset statistics</li>
+        <li>Cannot view original PII</li>
+      </ul>
+      <button class="btn-enter btn-analytics" id="btn-analytics" onclick="tryEnter('analytics')">Enter Analytics</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Password Modal -->
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-icon" id="modal-icon"></div>
+    <h3 id="modal-title">Enter password</h3>
+    <p class="modal-sub" id="modal-sub">This workspace is password protected.</p>
+    <label>Password</label>
+    <input type="password" id="modal-pwd" placeholder="Enter workspace password" onkeydown="if(event.key==='Enter')confirmEntry()"/>
+    <div class="modal-error" id="modal-error"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-ok-admin" id="modal-ok" onclick="confirmEntry()">Enter</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Session check ──────────────────────────────────────────────────────────
+const auth = sessionStorage.getItem('piishield_authenticated');
+if (!auth) { window.location.href = 'login.html'; }
+
+const role     = sessionStorage.getItem('piishield_role') || 'analyst';
+const username = sessionStorage.getItem('piishield_user') || 'User';
+
+// Set topbar
+document.getElementById('user-display').textContent = username;
+document.getElementById('avatar').textContent = username.charAt(0).toUpperCase();
+
+const rolePill = document.getElementById('role-pill');
+const roleLabels = { admin: 'Admin', auditor: 'Auditor', analyst: 'Data Scientist' };
+rolePill.textContent = roleLabels[role] || role;
+rolePill.className = 'role-pill ' + (role === 'admin' ? 'role-admin' : role === 'auditor' ? 'role-auditor' : 'role-analyst');
+
+// ── Passwords per workspace ────────────────────────────────────────────────
+const PASSWORDS = { admin: 'admin123', audit: 'audit123', analytics: 'data123' };
+const DESTINATIONS = { admin: 'index.html', audit: 'audit.html', analytics: 'analytics.html' };
+
+// ── Access per role ────────────────────────────────────────────────────────
+const ROLE_ACCESS = {
+  admin:   ['admin', 'audit', 'analytics'],
+  auditor: ['audit'],
+  analyst: ['analytics']
+};
+const allowed = ROLE_ACCESS[role] || ['analytics'];
+
+// Apply card states
+const CFG = {
+  admin:     { label: 'Admin Panel',       iconBg: '#eff4ff', iconColor: '#1a56db', okClass: 'btn-ok-admin' },
+  audit:     { label: 'Audit Chain',       iconBg: '#f0fdf4', iconColor: '#16a34a', okClass: 'btn-ok-audit' },
+  analytics: { label: 'Analytics Dashboard', iconBg: '#faf5ff', iconColor: '#7c3aed', okClass: 'btn-ok-analytics' }
+};
+
+['admin', 'audit', 'analytics'].forEach(block => {
+  const card  = document.getElementById('card-' + block);
+  const btn   = document.getElementById('btn-' + block);
+  const badge = document.getElementById('badge-' + block);
+  if (!allowed.includes(block)) {
+    card.classList.add('locked');
+    btn.disabled = true;
+    btn.textContent = 'No access';
+    badge.textContent = 'NO ACCESS';
+    badge.className = 'status-badge badge-denied';
+  } else {
+    badge.textContent = 'ACCESS';
+    badge.className = 'status-badge badge-access';
+  }
+});
+
+// ── Modal ──────────────────────────────────────────────────────────────────
+let pendingBlock = null;
+
+function tryEnter(block) {
+  if (!allowed.includes(block)) { showToast('You do not have permission to access this workspace.'); return; }
+  pendingBlock = block;
+  const cfg = CFG[block];
+  document.getElementById('modal-title').textContent = 'Enter ' + cfg.label;
+  document.getElementById('modal-sub').textContent = 'Enter the workspace password to continue.';
+  document.getElementById('modal-icon').style.cssText = `background:${cfg.iconBg}`;
+  document.getElementById('modal-icon').innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${cfg.iconColor}" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>`;
+  const okBtn = document.getElementById('modal-ok');
+  okBtn.className = cfg.okClass;
+  okBtn.textContent = 'Enter';
+  document.getElementById('modal-pwd').value = '';
+  document.getElementById('modal-error').textContent = '';
+  document.getElementById('overlay').classList.add('open');
+  setTimeout(() => document.getElementById('modal-pwd').focus(), 120);
+}
+
+function closeModal() {
+  document.getElementById('overlay').classList.remove('open');
+  setTimeout(() => { pendingBlock = null; }, 100);
+}
+
+function confirmEntry() {
+  if (!pendingBlock) return;
+  const pwd = document.getElementById('modal-pwd').value;
+  const correct = PASSWORDS[pendingBlock];
+  const dest = DESTINATIONS[pendingBlock];
+  if (pwd === correct) {
+    const target = dest;
+    closeModal();
+    window.location.href = target;
+  } else {
+    document.getElementById('modal-error').textContent = 'Incorrect password. Please try again.';
+    document.getElementById('modal-pwd').value = '';
+    document.getElementById('modal-pwd').focus();
+  }
+}
+
+function logout() {
+  sessionStorage.clear();
+  window.location.href = 'login.html';
+}
+
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast'; t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+</script>
+</body>
+</html>

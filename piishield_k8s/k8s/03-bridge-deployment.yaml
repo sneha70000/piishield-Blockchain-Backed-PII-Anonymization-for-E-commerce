@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: piishield-bridge
+  namespace: piishield
+  labels:
+    app: piishield-bridge
+spec:
+  replicas: 1  # kept at 1: the bridge holds a stateful Fabric Gateway
+               # connection per pod; scaling >1 is possible since each
+               # pod would just open its own gateway connection, but
+               # isn't necessary for this deployment's scale.
+  selector:
+    matchLabels:
+      app: piishield-bridge
+  template:
+    metadata:
+      labels:
+        app: piishield-bridge
+    spec:
+      containers:
+        - name: bridge
+          image: piishield-bridge:latest   # build via bridge-docker/Dockerfile
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4000
+          envFrom:
+            - configMapRef:
+                name: piishield-bridge-config
+          volumeMounts:
+            - name: fabric-wallet
+              mountPath: /app/wallet
+              readOnly: true
+            - name: fabric-connection-profile
+              mountPath: /app/connection-org1.json
+              subPath: connection-org1.json
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 4000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 4000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+      volumes:
+        - name: fabric-wallet
+          secret:
+            secretName: piishield-fabric-wallet
+            items:
+              - key: admin.id
+                path: admin.id
+              - key: appUser.id
+                path: appUser.id
+        - name: fabric-connection-profile
+          secret:
+            secretName: piishield-fabric-wallet
+            items:
+              - key: connection-org1.json
+                path: connection-org1.json
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: piishield-bridge
+  namespace: piishield
+spec:
+  selector:
+    app: piishield-bridge
+  ports:
+    - port: 4000
+      targetPort: 4000
+  type: ClusterIP   # internal only — the backend reaches it by DNS name,
+                     # it isn't exposed outside the cluster

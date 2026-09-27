@@ -1,0 +1,115 @@
+"""
+Blockchain Audit Trail — simulated Hyperledger-style immutable ledger.
+
+Each block contains:
+  - index
+  - timestamp
+  - action (UPLOAD / DETECT / ANONYMISE / DOWNLOAD)
+  - data payload
+  - previous_hash
+  - block_hash  (SHA-256 of all above)
+
+In a real deployment this writes to Hyperledger Fabric via the Fabric SDK.
+Here we maintain a JSON file acting as the ledger, with hash chaining intact.
+"""
+
+import hashlib
+import json
+import os
+from datetime import datetime
+from typing import Any, Dict, Optional
+from dotenv import load_dotenv
+
+load_dotenv()
+
+LEDGER_PATH = os.getenv("BLOCKCHAIN_LOG", "./data/blockchain_log.json")
+
+
+def _load_ledger() -> list:
+    os.makedirs(os.path.dirname(LEDGER_PATH) or ".", exist_ok=True)
+    if not os.path.exists(LEDGER_PATH):
+        return []
+    try:
+        with open(LEDGER_PATH, "r") as f:
+            return json.load(f)
+    except Exception:
+        return []
+
+
+def _save_ledger(chain: list) -> None:
+    os.makedirs(os.path.dirname(LEDGER_PATH) or ".", exist_ok=True)
+    with open(LEDGER_PATH, "w") as f:
+        json.dump(chain, f, indent=2, default=str)
+
+
+def _compute_hash(block: Dict) -> str:
+    block_copy = {k: v for k, v in block.items() if k != "block_hash"}
+    raw = json.dumps(block_copy, sort_keys=True, default=str).encode("utf-8")
+    return hashlib.sha256(raw).hexdigest()
+
+
+def _get_genesis_hash() -> str:
+    return hashlib.sha256(b"PIIShield-Genesis-Block-2025").hexdigest()
+
+
+def add_block(
+    action: str,
+    dataset_id: int,
+    payload: Dict[str, Any],
+    pii_type: Optional[str] = None,
+    anonymisation_method: Optional[str] = None,
+    records_affected: int = 0,
+) -> Dict:
+    """
+    Add a new block to the chain and return it.
+    """
+    chain = _load_ledger()
+    previous_hash = chain[-1]["block_hash"] if chain else _get_genesis_hash()
+    index = len(chain)
+
+    block = {
+        "index": index,
+        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "action": action,
+        "dataset_id": dataset_id,
+        "pii_type": pii_type,
+        "anonymisation_method": anonymisation_method,
+        "records_affected": records_affected,
+        "payload": payload,
+        "previous_hash": previous_hash,
+        "block_hash": "",   # computed below
+    }
+
+    block["block_hash"] = _compute_hash(block)
+    chain.append(block)
+    _save_ledger(chain)
+    return block
+
+
+def get_chain(dataset_id: Optional[int] = None) -> list:
+    """Return the full chain, optionally filtered by dataset_id."""
+    chain = _load_ledger()
+    if dataset_id is not None:
+        chain = [b for b in chain if b.get("dataset_id") == dataset_id]
+    return chain
+
+
+def verify_chain() -> Dict:
+    """
+    Verify the integrity of the entire chain.
+    Returns {"valid": bool, "broken_at": int|None, "total_blocks": int}
+    """
+    chain = _load_ledger()
+    if not chain:
+        return {"valid": True, "broken_at": None, "total_blocks": 0}
+
+    expected_prev = _get_genesis_hash()
+    for block in chain:
+        if block.get("previous_hash") != expected_prev:
+            return {"valid": False, "broken_at": block["index"], "total_blocks": len(chain)}
+        computed = _compute_hash(block)
+        if computed != block.get("block_hash"):
+            return {"valid": False, "broken_at": block["index"], "total_blocks": len(chain)}
+        expected_prev = block["block_hash"]
+
+    return {"valid": True, "broken_at": None, "total_blocks": len(chain)}

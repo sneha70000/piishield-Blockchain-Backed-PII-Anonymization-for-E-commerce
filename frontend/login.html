@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PIIShield — Sign In / Register</title>
+<style>
+  :root {
+    --primary: #ff6a00;
+    --primary-dark: #e05200;
+    --accent: #111111;
+    --text-dark: #0f0f0f;
+    --text-muted: #6b6b6b;
+    --error: #dc2626;
+    --success: #16a34a;
+    --border: #e5c9ab;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #000000, #1a1a1a, #000000);
+    background-size: 200% 200%;
+    animation: bgShift 12s ease infinite;
+    overflow: hidden;
+    padding: 20px;
+  }
+  @keyframes bgShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Floating decorative blobs */
+  .blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.35;
+    z-index: 0;
+    animation: float 8s ease-in-out infinite;
+  }
+  .blob1 { width: 300px; height: 300px; background: var(--primary); top: -80px; left: -80px; }
+  .blob2 { width: 250px; height: 250px; background: var(--accent); bottom: -60px; right: -60px; animation-delay: 2s; }
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) translateX(0px); }
+    50% { transform: translateY(-25px) translateX(15px); }
+  }
+
+  .container {
+    position: relative;
+    width: 100%;
+    max-width: 780px;
+    min-height: 480px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+    overflow: hidden;
+    z-index: 1;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: cardIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes cardIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .form-panel {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 45px;
+    transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.5s ease;
+  }
+  .form-panel form { width: 100%; max-width: 300px; }
+
+  #loginPanel { left: 0; z-index: 2; }
+  #registerPanel { left: 0; opacity: 0; z-index: 1; pointer-events: none; }
+
+  .container.show-register #loginPanel {
+    transform: translateX(100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .container.show-register #registerPanel {
+    transform: translateX(100%);
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 2;
+  }
+
+  .overlay-panel {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark) 60%, var(--accent));
+    background-size: 200% 200%;
+    animation: bgShift 6s ease infinite;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+    transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+    z-index: 3;
+  }
+  .container.show-register .overlay-panel {
+    transform: translateX(-100%);
+  }
+
+  .logo {
+    width: 52px; height: 52px; border-radius: 13px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 18px;
+  }
+  .logo svg { width: 28px; height: 28px; fill: white; }
+  .form-panel .logo { background: linear-gradient(135deg, var(--primary), var(--accent)); margin: 0 auto 16px; }
+
+  h1 { font-size: 22px; color: var(--text-dark); margin-bottom: 4px; text-align: center; }
+  .overlay-panel h1 { color: white; }
+  .subtitle {
+    text-align: center; color: var(--text-muted); font-size: 12px;
+    margin-bottom: 24px; letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .overlay-panel p { font-size: 14px; line-height: 1.6; opacity: 0.9; margin-bottom: 28px; }
+
+  label {
+    display: block; font-size: 12px; font-weight: 600;
+    color: var(--text-dark); margin-bottom: 5px; margin-top: 14px;
+  }
+  input {
+    width: 100%; padding: 11px 13px; border: 1.5px solid var(--border);
+    border-radius: 8px; font-size: 14px; transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  input:focus {
+    outline: none; border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(255,106,0,0.22);
+  }
+  .hint { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+
+  button.primary-btn {
+    width: 100%; margin-top: 22px; padding: 12px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white; border: none; border-radius: 8px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  button.primary-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(255,106,0,0.5); }
+  button.primary-btn:active { transform: translateY(0); }
+
+  button.ghost-btn {
+    padding: 10px 28px;
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,0.7);
+    color: white; border-radius: 24px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease;
+  }
+  button.ghost-btn:hover { background: rgba(255,255,255,0.15); transform: translateY(-1px); }
+
+  .msg { font-size: 12px; margin-top: 12px; text-align: center; min-height: 16px; }
+  .msg.error { color: var(--error); }
+  .msg.success { color: var(--success); }
+
+  .demo-hint {
+    background: #f8fafc; border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 10px; font-size: 10.5px; color: var(--text-muted);
+    margin-top: 18px; text-align: center; line-height: 1.5;
+  }
+
+  @media (max-width: 640px) {
+    .container { min-height: 620px; }
+    .form-panel { position: relative; width: 100%; padding: 32px 28px; }
+    .overlay-panel { display: none; }
+    #registerPanel {
+      position: absolute; top: 0; left: 0; opacity: 0;
+      transform: translateY(15px); transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .container.show-register #loginPanel { opacity: 0; transform: translateY(-15px); pointer-events: none; }
+    .container.show-register #registerPanel { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .mobile-switch { text-align: center; margin-top: 16px; font-size: 13px; }
+    .mobile-switch a { color: var(--primary); font-weight: 600; text-decoration: none; }
+  }
+  @media (min-width: 641px) {
+    .mobile-switch { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+
+<div class="container" id="container">
+
+  <!-- LOGIN PANEL -->
+  <div class="form-panel" id="loginPanel">
+    <form id="loginForm">
+      <div class="logo"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg></div>
+      <h1>Welcome Back</h1>
+      <div class="subtitle">Sign in to PIIShield</div>
+
+      <label for="loginUsername">Username</label>
+      <input type="text" id="loginUsername" autocomplete="username" required>
+
+      <label for="loginPassword">Password</label>
+      <input type="password" id="loginPassword" autocomplete="current-password" required>
+
+      <button type="submit" class="primary-btn">Sign In</button>
+      <div style="text-align:right;margin-top:8px"><a href="forgot-password.html" style="font-size:12px;color:#4f46e5;text-decoration:none;font-weight:500">Forgot password?</a></div>
+      <div class="msg error" id="loginError"></div>
+
+      <div class="demo-hint">
+        Your username was shown when you registered — format: <strong>companyname@piishield</strong>
+        (auditor/analyst accounts get <strong>-auditor</strong> / <strong>-analytics</strong> added)
+      </div>
+      <div class="mobile-switch">New here? <a href="#" onclick="toggleRegister(true); return false;">Create an account</a></div>
+    </form>
+  </div>
+
+  <!-- REGISTER PANEL -->
+  <div class="form-panel" id="registerPanel">
+    <form id="registerForm">
+      <div class="logo"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg></div>
+      <h1>Create Account</h1>
+      <div class="subtitle">Join PIIShield</div>
+
+      <label for="regCompany">Company Name</label>
+      <input type="text" id="regCompany" required minlength="2" placeholder="e.g. Acme Corp">
+
+      <label for="regRole">Panel / Role</label>
+      <select id="regRole" required style="width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;">
+        <option value="admin">Admin</option>
+        <option value="auditor">Auditor</option>
+        <option value="analyst">Data Scientist (Analytics)</option>
+      </select>
+      <div class="hint">Each company registers each panel separately, the first time it's used</div>
+
+      <label for="regPassword">Password</label>
+      <input type="password" id="regPassword" required minlength="8" placeholder="e.g. Acme@2026">
+      <div class="hint">At least 8 characters, with 1 uppercase letter, 1 number, and 1 special character</div>
+
+      <label for="regSecQ">Security Question</label>
+      <select id="regSecQ" style="width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;">
+        <option>What was the name of your first pet?</option>
+        <option>What city were you born in?</option>
+        <option>What is your mother's maiden name?</option>
+        <option>What was the name of your primary school?</option>
+        <option>What was your childhood nickname?</option>
+      </select>
+      <label for="regSecA">Answer</label>
+      <input type="text" id="regSecA" required placeholder="Your answer (case-insensitive)">
+      <label for="regConfirm">Confirm Password</label>
+      <input type="password" id="regConfirm" required>
+
+      <button type="submit" class="primary-btn">Create Account</button>
+      <div class="msg error" id="registerError"></div>
+      <div class="msg success" id="registerSuccess"></div>
+
+      <div class="mobile-switch">Already have an account? <a href="#" onclick="toggleRegister(false); return false;">Sign in</a></div>
+    </form>
+  </div>
+
+  <!-- OVERLAY (slides between panels, desktop only) -->
+  <div class="overlay-panel" id="overlayPanel">
+    <div id="overlayLoginSide">
+      <div class="logo"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg></div>
+      <h1>New here?</h1>
+      <p>Create an account to start scanning datasets, applying anonymisation, and tracking every action on a real blockchain audit trail.</p>
+      <button class="ghost-btn" onclick="toggleRegister(true)">Create Account</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const container = document.getElementById('container');
+  const overlayLoginSide = document.getElementById('overlayLoginSide');
+
+  function toggleRegister(showRegister) {
+    if (showRegister) {
+      container.classList.add('show-register');
+      overlayLoginSide.innerHTML = `
+        <div class="logo"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg></div>
+        <h1>Already a member?</h1>
+        <p>Sign in to access your PIIShield dashboard — detection, anonymisation, and the live blockchain audit chain.</p>
+        <button class="ghost-btn" onclick="toggleRegister(false)">Sign In</button>
+      `;
+    } else {
+      container.classList.remove('show-register');
+      overlayLoginSide.innerHTML = `
+        <div class="logo"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg></div>
+        <h1>New here?</h1>
+        <p>Create an account to start scanning datasets, applying anonymisation, and tracking every action on a real blockchain audit trail.</p>
+        <button class="ghost-btn" onclick="toggleRegister(true)">Create Account</button>
+      `;
+    }
+  }
+
+  // If arriving via register.html redirect, open directly on the register panel
+  if (new URLSearchParams(window.location.search).get('mode') === 'register') {
+    toggleRegister(true);
+  }
+
+  // ---- Demo login (no backend needed) ----
+  const DEMO = {'admin':'piishield2026','a1@piishield':'admin123'};
+  const API = 'http://172.28.236.73:8000/api';
+
+  document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const u = document.getElementById('loginUsername').value.trim().toLowerCase();
+    const p = document.getElementById('loginPassword').value;
+    const errorEl = document.getElementById('loginError');
+    errorEl.textContent = '';
+
+    try {
+      if (DEMO[u] && DEMO[u] === p) {
+        // Demo login removed - use real API login below
+      }
+      const res = await fetch(`${API}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: u, password: p }),
+      });
+      const data = await res.json();
+      if (!res.ok) { errorEl.textContent = data.detail || 'Incorrect username or password.'; return; }
+
+      sessionStorage.setItem('piishield_authenticated', 'true');
+      sessionStorage.setItem('piishield_token', data.token);
+      sessionStorage.setItem('piishield_user', data.username);
+      sessionStorage.setItem('piishield_role', data.role);
+      sessionStorage.setItem('piishield_company', data.company);
+      window.location.href = 'hub.html';
+    } catch (err) {
+      errorEl.textContent = 'Could not reach the server. Is the backend running?';
+    }
+  });
+
+  document.getElementById('registerForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const company = document.getElementById('regCompany').value.trim();
+    const role = document.getElementById('regRole').value;
+    const password = document.getElementById('regPassword').value;
+    const confirm = document.getElementById('regConfirm').value;
+    const errorEl = document.getElementById('registerError');
+    const successEl = document.getElementById('registerSuccess');
+    errorEl.textContent = '';
+    successEl.textContent = '';
+
+    if (password !== confirm) { errorEl.textContent = 'Passwords do not match.'; return; }
+
+    const strongPwd = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>_\-+=~`[\]\/\\;'])[^\s]{8,}$/;
+    if (!strongPwd.test(password)) {
+      errorEl.textContent = 'Password must be at least 8 characters and include 1 uppercase letter, 1 number, and 1 special character.';
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          company, role, password,
+          security_question: document.getElementById('regSecQ').value,
+          security_answer: document.getElementById('regSecA').value,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) { errorEl.textContent = data.detail || 'Could not create account.'; return; }
+
+      sessionStorage.setItem('piishield_authenticated', 'true');
+      sessionStorage.setItem('piishield_token', data.token);
+      sessionStorage.setItem('piishield_user', data.username);
+      sessionStorage.setItem('piishield_role', data.role);
+      sessionStorage.setItem('piishield_company', data.company);
+
+      successEl.innerHTML = `Account created — your username is <strong>${data.username}</strong>. Save this! Redirecting...`;
+      setTimeout(() => { window.location.href = 'hub.html'; }, 2200);
+    } catch (err) {
+      errorEl.textContent = 'Could not reach the server. Is the backend running?';
+    }
+  });
+</script>
+</body>
+</html>

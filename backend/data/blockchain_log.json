@@ -1,0 +1,1286 @@
+[
+  {
+    "index": 0,
+    "timestamp": "2026-06-14T06:05:50.783203Z",
+    "action": "UPLOAD",
+    "dataset_id": 1,
+    "pii_type": null,
+    "anonymisation_method": null,
+    "records_affected": 0,
+    "payload": {
+      "filename": "ecommerce_sample.csv",
+      "rows": 10,
+      "path": "./data/uploads\\a6db9820-db9b-45eb-9850-fc80d92cb2e9.csv"
+    },
+    "previous_hash": "cbb2a0b3a114e8401d5d79d65787d3a7af988b4a08e4e63c6f9522d5062ba67e",
+    "block_hash": "7fb17c28735c38f8060df255c39133eabc62f2c7eed83518eb8f6e8f96a97b9d"
+  },
+  {
+    "index": 1,
+    "timestamp": "2026-06-14T06:06:02.810851Z",
+    "action": "DETECT",
+    "dataset_id": 1,
+    "pii_type": null,
+    "anonymisation_method": null,
+    "records_affected": 175,
+    "payload": {
+      "columns_with_pii": [
+        "customer_name",
+        "email",
+        "phone",
+        "address",
+        "city",
+        "pincode",
+        "dob",
+        "pan_number",
+        "aadhaar",
+        "credit_card"
+      ],
+      "total_pii_cells": 175
+    },
+    "previous_hash": "7fb17c28735c38f8060df255c39133eabc62f2c7eed83518eb8f6e8f96a97b9d",
+    "block_hash": "33289b310424ec997f483335e999658c523195c4afd903581a62ea0b6042ea29"
+  },
+  {
+    "index": 2,
+    "timestamp": "2026-06-14T06:07:09.066893Z",
+    "action": "ANONYMISE",
+    "dataset_id": 1,
+    "pii_type": "NAME",
+    "anonymisation_method": "MASK",
+    "records_affected": 10,
+    "payload": {
+      "column": "customer_name"
+    },
+    "previous_hash": "33289b310424ec997f483335e999658c523195c4afd903581a62ea0b6042ea29",
+    "block_hash": "6e7dc451bab1042b5b7b4c5cf7cfaae93b4295b8d10cc567c926fc41dd081c2e"
+  },
+  {
+    "index": 3,
+    "timestamp": "2026-06-14T06:07:09.083248Z",
+    "action": "ANONYMISE",
+    "dataset_id": 1,
+    "pii_type": "EMAIL",
+    "anonymisation_method": "MASK",
+    "records_affected": 10,
+    "payload": {
+      "column": "email"
+    },
+    "previous_hash": "6e7dc451bab1042b5b7b4c5cf7cfaae93b4295b8d10cc567c926fc41dd081c2e",
+    "block_hash": "ed99305d0b859d154f53910b08319920cefe7b2153c522fdb9add08ab4b9cafe"
+  },
+  {
+    "index": 4,
+    "timestamp": "2026-06-14T06:07:09.101287Z",
+    "action": "ANONYMISE",
+    "dataset_id": 1,
+    "pii_type": "PHONE",
+    "anonymisation_method": "MASK",
+    "records_affected": 10,
+    "payload": {
+      "column": "phone"
+    },
+    "previous_hash": "ed99305d0b859d154f53910b08319920cefe7b2153c522fdb9add08ab4b9cafe",
+    "block_hash": "4673de2212004ca227c69a88cc1c6848bb7d51d8e5a64a89896024975444634f"
+  },
+  {
+    "index": 5,
+    "timestamp": "2026-06-14T06:07:09.116782Z",
+    "action": "ANONYMISE",
+    "dataset_id": 1,
+    "pii_type": "ADDRESS",
+    "anonymisation_method": "MASK",
+    "records_affected": 10,
+    "payload": {
+      "column": "address"
+    },
+    "previous_hash": "4673de2212004ca227c69a88cc1c6848bb7d51d8e5a64a89896024975444634f",
+    "block_hash": "daf142e1eac1904535607559a3c4bb0624b4a37426dff34b04291dd8f3817316"
+  },
+  {
+    "index": 6,
+    "timestamp": "2026-06-14T06:07:09.132107Z",
+    "action": "ANONYMISE",
+    "dataset_id": 1,
+    "pii_type": "ADDRESS",
+    "anonymisation_method": "MASK",
+    "records_affected": 10,
+    "payload": {
+      "column": "city"
+    },
+    "previous_hash": "daf142e1eac1904535607559a3c4bb0624b4a37426dff34b04291dd8f3817316",
+    "block_hash": "750f96b7af50c4540742a0cf2194c762df88e7afbd90246326b725b0bcf80c4c"
+  },
+  {
+    "index": 7,
+    "timestamp": "2026-06-14T06:07:09.147632Z",
+    "action": "ANONYMISE",
+    "dataset_id": 1,
+    "pii_type": "ZIP_CODE",
+    "anonymisation_method": "MASK",
+    "records_affected": 10,
+    "payload": {
+      "column": "pincode"
+    },
+    "previous_hash": "750f96b7af50c4540742a0cf2194c762df88e7afbd90246326b725b0bcf80c4c",
+    "block_hash": "c48bc3c3632328a6ad93ccab30f527f12f601482b58aaa1f07de6c215d2a99a7"
+  },
+  {
+    "index": 8,
+    "timestamp": "2026-06-14T06:07:09.164271Z",
+    "action": "ANONYMISE",
+    "dataset_id": 1,
+    "pii_type": "DATE_OF_BIRTH",
+    "anonymisation_method": "MASK",
+    "records_affected": 10,
+    "payload": {
+      "column": "dob"
+    },
+    "previous_hash": "c48bc3c3632328a6ad93ccab30f527f12f601482b58aaa1f07de6c215d2a99a7",
+    "block_hash": "2f931afc569840ed85dac0afd29f336d16c1ffb7cf893a4516f3f55fabc45904"
+  },
+  {
+    "index": 9,
+    "timestamp": "2026-06-14T06:07:09.184444Z",
+    "action": "ANONYMISE",
+    "dataset_id": 1,
+    "pii_type": "PAN",
+    "anonymisation_method": "MASK",
+    "records_affected": 10,
+    "payload": {
+      "column": "pan_number"
+    },
+    "previous_hash": "2f931afc569840ed85dac0afd29f336d16c1ffb7cf893a4516f3f55fabc45904",
+    "block_hash": "026f069962d8ddd57bfd8b0f010fc506d851e9edf062049dd4cbe1f23d196557"
+  },
+  {
+    "index": 10,
+    "timestamp": "2026-06-14T06:07:09.202024Z",
+    "action": "ANONYMISE",
+    "dataset_id": 1,
+    "pii_type": "AADHAAR",
+    "anonymisation_method": "HASH",
+    "records_affected": 10,
+    "payload": {
+      "column": "aadhaar"
+    },
+    "previous_hash": "026f069962d8ddd57bfd8b0f010fc506d851e9edf062049dd4cbe1f23d196557",
+    "block_hash": "ac3ef985b58d1b1cdb4a37a58496bc1bad72fd4832dc68663d8436dc350eeaa7"
+  },
+  {
+    "index": 11,
+    "timestamp": "2026-06-14T06:07:09.219605Z",
+    "action": "ANONYMISE",
+    "dataset_id": 1,
+    "pii_type": "PHONE",
+    "anonymisation_method": "HASH",
+    "records_affected": 10,
+    "payload": {
+      "column": "credit_card"
+    },
+    "previous_hash": "ac3ef985b58d1b1cdb4a37a58496bc1bad72fd4832dc68663d8436dc350eeaa7",
+    "block_hash": "9ac64a2f3eec6875bd0f2059f8cb10a751e047c65f556596ccea0f585297d2e9"
+  },
+  {
+    "index": 12,
+    "timestamp": "2026-06-14T06:09:03.177166Z",
+    "action": "UPLOAD",
+    "dataset_id": 2,
+    "pii_type": null,
+    "anonymisation_method": null,
+    "records_affected": 0,
+    "payload": {
+      "filename": "ecommerce_sample.csv",
+      "rows": 10,
+      "path": "./data/uploads\\4e16e7ef-979f-435a-80e7-cba017abd74f.csv"
+    },
+    "previous_hash": "9ac64a2f3eec6875bd0f2059f8cb10a751e047c65f556596ccea0f585297d2e9",
+    "block_hash": "507af7b48f547efcf596518ed81fbceea09c42a2780c8f019ec5c83b623e05f1"
+  },
+  {
+    "index": 13,
+    "timestamp": "2026-06-14T06:09:13.102388Z",
+    "action": "DETECT",
+    "dataset_id": 2,
+    "pii_type": null,
+    "anonymisation_method": null,
+    "records_affected": 175,
+    "payload": {
+      "columns_with_pii": [
+        "customer_name",
+        "email",
+        "phone",
+        "address",
+        "city",
+        "pincode",
+        "dob",
+        "pan_number",
+        "aadhaar",
+        "credit_card"
+      ],
+      "total_pii_cells": 175
+    },
+    "previous_hash": "507af7b48f547efcf596518ed81fbceea09c42a2780c8f019ec5c83b623e05f1",
+    "block_hash": "4d14842b6f6bde105a58c41c6693a197ffc4fc5d566a563d4bb8924c74638307"
+  },
+  {
+    "index": 14,
+    "timestamp": "2026-06-14T06:09:17.530800Z",
+    "action": "ANONYMISE",
+    "dataset_id": 2,
+    "pii_type": "NAME",
+    "anonymisation_method": "MASK",
+    "records_affected": 10,
+    "payload": {
+      "column": "customer_name"
+    },
+    "previous_hash": "4d14842b6f6bde105a58c41c6693a197ffc4fc5d566a563d4bb8924c74638307",
+    "block_hash": "11d0f2df64fe3b88835d964cb72adebdfdf422353fd6649cbdac8c31f8268dd3"
+  },
+  {
+    "index": 15,
+    "timestamp": "2026-06-14T06:09:17.548840Z",
+    "action": "ANONYMISE",
+    "dataset_id": 2,
+    "pii_type": "EMAIL",
+    "anonymisation_method": "MASK",
+    "records_affected": 10,
+    "payload": {
+      "column": "email"
+    },
+    "previous_hash": "11d0f2df64fe3b88835d964cb72adebdfdf422353fd6649cbdac8c31f8268dd3",
+    "block_hash": "bbc627a3e5ce49e3820fefe73639373594885e0deff2e2d8ecdc9eaad0c21472"
+  },
+  {
+    "index": 16,
+    "timestamp": "2026-06-14T06:09:17.570136Z",
+    "action": "ANONYMISE",
+    "dataset_id": 2,
+    "pii_type": "PHONE",
+    "anonymisation_method": "MASK",
+    "records_affected": 10,
+    "payload": {
+      "column": "phone"
+    },
+    "previous_hash": "bbc627a3e5ce49e3820fefe73639373594885e0deff2e2d8ecdc9eaad0c21472",
+    "block_hash": "6f0be97c79ebff1541382509238297581978cce50b35cfbc0daa9fb12513494e"
+  },
+  {
+    "index": 17,
+    "timestamp": "2026-06-14T06:09:17.589033Z",
+    "action": "ANONYMISE",
+    "dataset_id": 2,
+    "pii_type": "ADDRESS",
+    "anonymisation_method": "MASK",
+    "records_affected": 10,
+    "payload": {
+      "column": "address"
+    },
+    "previous_hash": "6f0be97c79ebff1541382509238297581978cce50b35cfbc0daa9fb12513494e",
+    "block_hash": "e07f530ca07b593173bc8cc67576ab5c5d8cb2a6105d61ebaa93546d99038859"
+  },
+  {
+    "index": 18,
+    "timestamp": "2026-06-14T06:09:17.610373Z",
+    "action": "ANONYMISE",
+    "dataset_id": 2,
+    "pii_type": "ADDRESS",
+    "anonymisation_method": "MASK",
+    "records_affected": 10,
+    "payload": {
+      "column": "city"
+    },
+    "previous_hash": "e07f530ca07b593173bc8cc67576ab5c5d8cb2a6105d61ebaa93546d99038859",
+    "block_hash": "683eb299db84e0553750c58b60c3e6674f5ccb48442d8580eda5d420a971fb12"
+  },
+  {
+    "index": 19,
+    "timestamp": "2026-06-14T06:09:17.631517Z",
+    "action": "ANONYMISE",
+    "dataset_id": 2,
+    "pii_type": "ZIP_CODE",
+    "anonymisation_method": "MASK",
+    "records_affected": 10,
+    "payload": {
+      "column": "pincode"
+    },
+    "previous_hash": "683eb299db84e0553750c58b60c3e6674f5ccb48442d8580eda5d420a971fb12",
+    "block_hash": "6e4c53c9a53aa7777ebc82532660adc640d7c5ce5f524f8da1ef75fc2a58e832"
+  },
+  {
+    "index": 20,
+    "timestamp": "2026-06-14T06:09:17.650332Z",
+    "action": "ANONYMISE",
+    "dataset_id": 2,
+    "pii_type": "DATE_OF_BIRTH",
+    "anonymisation_method": "MASK",
+    "records_affected": 10,
+    "payload": {
+      "column": "dob"
+    },
+    "previous_hash": "6e4c53c9a53aa7777ebc82532660adc640d7c5ce5f524f8da1ef75fc2a58e832",
+    "block_hash": "9ba73a8ad1185833644e43b5f04f525c954108d04384239593c9c7c8248a1f9f"
+  },
+  {
+    "index": 21,
+    "timestamp": "2026-06-14T06:09:17.668378Z",
+    "action": "ANONYMISE",
+    "dataset_id": 2,
+    "pii_type": "PAN",
+    "anonymisation_method": "MASK",
+    "records_affected": 10,
+    "payload": {
+      "column": "pan_number"
+    },
+    "previous_hash": "9ba73a8ad1185833644e43b5f04f525c954108d04384239593c9c7c8248a1f9f",
+    "block_hash": "8a2036fc042ee4a23957ddc2e5a956fe6ce6059a8161267068b751bb6e6534e4"
+  },
+  {
+    "index": 22,
+    "timestamp": "2026-06-14T06:09:17.687403Z",
+    "action": "ANONYMISE",
+    "dataset_id": 2,
+    "pii_type": "AADHAAR",
+    "anonymisation_method": "HASH",
+    "records_affected": 10,
+    "payload": {
+      "column": "aadhaar"
+    },
+    "previous_hash": "8a2036fc042ee4a23957ddc2e5a956fe6ce6059a8161267068b751bb6e6534e4",
+    "block_hash": "f6711dc3c5fbd4552be1caa3fc6781630e6b67acc9530f5d5d9f2edc09c423e9"
+  },
+  {
+    "index": 23,
+    "timestamp": "2026-06-14T06:09:17.705978Z",
+    "action": "ANONYMISE",
+    "dataset_id": 2,
+    "pii_type": "PHONE",
+    "anonymisation_method": "HASH",
+    "records_affected": 10,
+    "payload": {
+      "column": "credit_card"
+    },
+    "previous_hash": "f6711dc3c5fbd4552be1caa3fc6781630e6b67acc9530f5d5d9f2edc09c423e9",
+    "block_hash": "4d0032886d6184166cd603b49804ef33b1dffb911c5cd8f97b69d3098a0d12f1"
+  },
+  {
+    "index": 24,
+    "timestamp": "2026-06-14T06:12:02.575637Z",
+    "action": "DOWNLOAD",
+    "dataset_id": 2,
+    "pii_type": null,
+    "anonymisation_method": null,
+    "records_affected": 0,
+    "payload": {
+      "file": "anonymised_2.csv"
+    },
+    "previous_hash": "4d0032886d6184166cd603b49804ef33b1dffb911c5cd8f97b69d3098a0d12f1",
+    "block_hash": "ceba29ed1c526f73232450466d1bf0bf6aea9f26a21f1af56ceb4ceb086f12fa"
+  },
+  {
+    "index": 25,
+    "timestamp": "2026-06-14T06:30:31.584925Z",
+    "action": "UPLOAD",
+    "dataset_id": 3,
+    "pii_type": null,
+    "anonymisation_method": null,
+    "records_affected": 0,
+    "payload": {
+      "filename": "retail_shopping.csv",
+      "rows": 15,
+      "path": "./data/uploads\\f7f12f46-db68-436b-81f6-409d26a3f70f.csv"
+    },
+    "previous_hash": "ceba29ed1c526f73232450466d1bf0bf6aea9f26a21f1af56ceb4ceb086f12fa",
+    "block_hash": "04ae769440b53537f95894c98d6691c8a7bbed21e547872a3e254cdd26f6ef45"
+  },
+  {
+    "index": 26,
+    "timestamp": "2026-06-14T06:30:41.893340Z",
+    "action": "DETECT",
+    "dataset_id": 3,
+    "pii_type": null,
+    "anonymisation_method": null,
+    "records_affected": 303,
+    "payload": {
+      "columns_with_pii": [
+        "customer_name",
+        "email",
+        "phone",
+        "address",
+        "city",
+        "pincode",
+        "dob",
+        "pan_number",
+        "aadhaar",
+        "credit_card",
+        "total_spent",
+        "last_purchase_date",
+        "membership_tier"
+      ],
+      "total_pii_cells": 303
+    },
+    "previous_hash": "04ae769440b53537f95894c98d6691c8a7bbed21e547872a3e254cdd26f6ef45",
+    "block_hash": "4277ca6ff89ba038cc48cebb9b293637c7a9fabc45a90886a918f8b2c1bd7790"
+  },
+  {
+    "index": 27,
+    "timestamp": "2026-06-14T06:31:12.691171Z",
+    "action": "ANONYMISE",
+    "dataset_id": 3,
+    "pii_type": "NAME",
+    "anonymisation_method": "MASK",
+    "records_affected": 15,
+    "payload": {
+      "column": "customer_name"
+    },
+    "previous_hash": "4277ca6ff89ba038cc48cebb9b293637c7a9fabc45a90886a918f8b2c1bd7790",
+    "block_hash": "2ea5a51829ce368fcf251bf0e2dde77b5a01e8768a3fc59730637fc7f14c12df"
+  },
+  {
+    "index": 28,
+    "timestamp": "2026-06-14T06:31:12.711102Z",
+    "action": "ANONYMISE",
+    "dataset_id": 3,
+    "pii_type": "EMAIL",
+    "anonymisation_method": "MASK",
+    "records_affected": 15,
+    "payload": {
+      "column": "email"
+    },
+    "previous_hash": "2ea5a51829ce368fcf251bf0e2dde77b5a01e8768a3fc59730637fc7f14c12df",
+    "block_hash": "be8cd68b6827e029b78ce143b4adb4a9d9acaac045f615ae33398bb5a38cb94e"
+  },
+  {
+    "index": 29,
+    "timestamp": "2026-06-14T06:31:12.731930Z",
+    "action": "ANONYMISE",
+    "dataset_id": 3,
+    "pii_type": "PHONE",
+    "anonymisation_method": "MASK",
+    "records_affected": 15,
+    "payload": {
+      "column": "phone"
+    },
+    "previous_hash": "be8cd68b6827e029b78ce143b4adb4a9d9acaac045f615ae33398bb5a38cb94e",
+    "block_hash": "44059a4d2176a3cd4c9647ba3607e396d5a1c7023890bf61621ce2eb52822b60"
+  },
+  {
+    "index": 30,
+    "timestamp": "2026-06-14T06:31:12.751145Z",
+    "action": "ANONYMISE",
+    "dataset_id": 3,
+    "pii_type": "ADDRESS",
+    "anonymisation_method": "MASK",
+    "records_affected": 15,
+    "payload": {
+      "column": "address"
+    },
+    "previous_hash": "44059a4d2176a3cd4c9647ba3607e396d5a1c7023890bf61621ce2eb52822b60",
+    "block_hash": "37acb56d01acfb0b5d7fd771b1b0112a7f9b7dd1c63a41200010b79c7d03f1ff"
+  },
+  {
+    "index": 31,
+    "timestamp": "2026-06-14T06:31:12.770501Z",
+    "action": "ANONYMISE",
+    "dataset_id": 3,
+    "pii_type": "ADDRESS",
+    "anonymisation_method": "MASK",
+    "records_affected": 15,
+    "payload": {
+      "column": "city"
+    },
+    "previous_hash": "37acb56d01acfb0b5d7fd771b1b0112a7f9b7dd1c63a41200010b79c7d03f1ff",
+    "block_hash": "f118f820c1a0bfcbe5ecf1ef2499c0bd5bc52a24c1671c6dd751f9402df97271"
+  },
+  {
+    "index": 32,
+    "timestamp": "2026-06-14T06:31:12.788655Z",
+    "action": "ANONYMISE",
+    "dataset_id": 3,
+    "pii_type": "ZIP_CODE",
+    "anonymisation_method": "MASK",
+    "records_affected": 15,
+    "payload": {
+      "column": "pincode"
+    },
+    "previous_hash": "f118f820c1a0bfcbe5ecf1ef2499c0bd5bc52a24c1671c6dd751f9402df97271",
+    "block_hash": "c586a55a5ec91390c810186ebde2ac1a8f2b17f42eaf74bf879f7ce0066cf102"
+  },
+  {
+    "index": 33,
+    "timestamp": "2026-06-14T06:31:12.808977Z",
+    "action": "ANONYMISE",
+    "dataset_id": 3,
+    "pii_type": "DATE_OF_BIRTH",
+    "anonymisation_method": "MASK",
+    "records_affected": 15,
+    "payload": {
+      "column": "dob"
+    },
+    "previous_hash": "c586a55a5ec91390c810186ebde2ac1a8f2b17f42eaf74bf879f7ce0066cf102",
+    "block_hash": "b73eb2234ed1c8f31d92e41426ab3a3e82e939d25c554d1149e417d5bdda3598"
+  },
+  {
+    "index": 34,
+    "timestamp": "2026-06-14T06:31:12.828586Z",
+    "action": "ANONYMISE",
+    "dataset_id": 3,
+    "pii_type": "PAN",
+    "anonymisation_method": "MASK",
+    "records_affected": 15,
+    "payload": {
+      "column": "pan_number"
+    },
+    "previous_hash": "b73eb2234ed1c8f31d92e41426ab3a3e82e939d25c554d1149e417d5bdda3598",
+    "block_hash": "e1584695d3c808fa61afae1c35449a06026bf36ca9629da15390cf159b2b8e89"
+  },
+  {
+    "index": 35,
+    "timestamp": "2026-06-14T06:31:12.848605Z",
+    "action": "ANONYMISE",
+    "dataset_id": 3,
+    "pii_type": "AADHAAR",
+    "anonymisation_method": "HASH",
+    "records_affected": 15,
+    "payload": {
+      "column": "aadhaar"
+    },
+    "previous_hash": "e1584695d3c808fa61afae1c35449a06026bf36ca9629da15390cf159b2b8e89",
+    "block_hash": "95cacc419a54b1e8fa7da13aec01bb4c97e676945d8ddd1daa2f0575fc7bec19"
+  },
+  {
+    "index": 36,
+    "timestamp": "2026-06-14T06:31:12.867625Z",
+    "action": "ANONYMISE",
+    "dataset_id": 3,
+    "pii_type": "PHONE",
+    "anonymisation_method": "HASH",
+    "records_affected": 15,
+    "payload": {
+      "column": "credit_card"
+    },
+    "previous_hash": "95cacc419a54b1e8fa7da13aec01bb4c97e676945d8ddd1daa2f0575fc7bec19",
+    "block_hash": "c1c8bb81ca593135b14797a00bdef1c2c67221f90f085a3d1c2da9a5bf4e875a"
+  },
+  {
+    "index": 37,
+    "timestamp": "2026-06-14T06:31:12.886636Z",
+    "action": "ANONYMISE",
+    "dataset_id": 3,
+    "pii_type": "ZIP_CODE",
+    "anonymisation_method": "MASK",
+    "records_affected": 15,
+    "payload": {
+      "column": "total_spent"
+    },
+    "previous_hash": "c1c8bb81ca593135b14797a00bdef1c2c67221f90f085a3d1c2da9a5bf4e875a",
+    "block_hash": "47962eb3cd6664bc75a9ed148a98429fba09e9e3188f1bf53e361b1d14ead474"
+  },
+  {
+    "index": 38,
+    "timestamp": "2026-06-14T06:31:12.905689Z",
+    "action": "ANONYMISE",
+    "dataset_id": 3,
+    "pii_type": "DATE_OF_BIRTH",
+    "anonymisation_method": "MASK",
+    "records_affected": 15,
+    "payload": {
+      "column": "last_purchase_date"
+    },
+    "previous_hash": "47962eb3cd6664bc75a9ed148a98429fba09e9e3188f1bf53e361b1d14ead474",
+    "block_hash": "440663fed17dd2c2fcb52407119df1e4e2e124bc712e64e3dece7bd6189a9419"
+  },
+  {
+    "index": 39,
+    "timestamp": "2026-06-14T06:31:12.925020Z",
+    "action": "ANONYMISE",
+    "dataset_id": 3,
+    "pii_type": "IP_ADDRESS",
+    "anonymisation_method": "MASK",
+    "records_affected": 15,
+    "payload": {
+      "column": "membership_tier"
+    },
+    "previous_hash": "440663fed17dd2c2fcb52407119df1e4e2e124bc712e64e3dece7bd6189a9419",
+    "block_hash": "5559c5af37fd905031016af1c1d94af52f5bccf7a56bc1a6aec33bf2bd6b4a75"
+  },
+  {
+    "index": 40,
+    "timestamp": "2026-06-14T06:31:17.897928Z",
+    "action": "DOWNLOAD",
+    "dataset_id": 3,
+    "pii_type": null,
+    "anonymisation_method": null,
+    "records_affected": 0,
+    "payload": {
+      "file": "anonymised_3.csv"
+    },
+    "previous_hash": "5559c5af37fd905031016af1c1d94af52f5bccf7a56bc1a6aec33bf2bd6b4a75",
+    "block_hash": "1d4410de13009a8ab40ab640f1aedb59095b43c3bcd497fed27969bf7f849676"
+  },
+  {
+    "index": 41,
+    "timestamp": "2026-06-14T07:04:35.323234Z",
+    "action": "UPLOAD",
+    "dataset_id": 4,
+    "pii_type": null,
+    "anonymisation_method": null,
+    "records_affected": 0,
+    "payload": {
+      "filename": "retail_shopping_new_dataset.csv",
+      "rows": 15,
+      "path": "./data/uploads\\86b0ea78-52e5-495a-9888-6fa208ae027f.csv"
+    },
+    "previous_hash": "1d4410de13009a8ab40ab640f1aedb59095b43c3bcd497fed27969bf7f849676",
+    "block_hash": "205685b8bd8502414708198ee56ac7963ac04535ef462ed5c30cc7a59345499c"
+  },
+  {
+    "index": 42,
+    "timestamp": "2026-06-14T07:04:41.422466Z",
+    "action": "DETECT",
+    "dataset_id": 4,
+    "pii_type": null,
+    "anonymisation_method": null,
+    "records_affected": 308,
+    "payload": {
+      "columns_with_pii": [
+        "customer_name",
+        "email",
+        "phone",
+        "address",
+        "city",
+        "pincode",
+        "dob",
+        "pan_number",
+        "aadhaar",
+        "credit_card",
+        "total_spent",
+        "last_purchase_date",
+        "membership_tier"
+      ],
+      "total_pii_cells": 308
+    },
+    "previous_hash": "205685b8bd8502414708198ee56ac7963ac04535ef462ed5c30cc7a59345499c",
+    "block_hash": "8ebf4faf1dff7e6486257ed8841a5fd829e1267ae09e1925662ff628a5cf0f76"
+  },
+  {
+    "index": 43,
+    "timestamp": "2026-06-14T07:05:07.851180Z",
+    "action": "ANONYMISE",
+    "dataset_id": 4,
+    "pii_type": "NAME",
+    "anonymisation_method": "MASK",
+    "records_affected": 15,
+    "payload": {
+      "column": "customer_name"
+    },
+    "previous_hash": "8ebf4faf1dff7e6486257ed8841a5fd829e1267ae09e1925662ff628a5cf0f76",
+    "block_hash": "fe377da5e95f00fc13713651b54ba9767d3df4d9d1b4302889bd1af690572ebf"
+  },
+  {
+    "index": 44,
+    "timestamp": "2026-06-14T07:05:07.873274Z",
+    "action": "ANONYMISE",
+    "dataset_id": 4,
+    "pii_type": "EMAIL",
+    "anonymisation_method": "MASK",
+    "records_affected": 15,
+    "payload": {
+      "column": "email"
+    },
+    "previous_hash": "fe377da5e95f00fc13713651b54ba9767d3df4d9d1b4302889bd1af690572ebf",
+    "block_hash": "f505c7d0ddced4088296113de1be5a21fb6eb52c9bfbd8e717c4e469221f7cf9"
+  },
+  {
+    "index": 45,
+    "timestamp": "2026-06-14T07:05:07.896563Z",
+    "action": "ANONYMISE",
+    "dataset_id": 4,
+    "pii_type": "PHONE",
+    "anonymisation_method": "MASK",
+    "records_affected": 15,
+    "payload": {
+      "column": "phone"
+    },
+    "previous_hash": "f505c7d0ddced4088296113de1be5a21fb6eb52c9bfbd8e717c4e469221f7cf9",
+    "block_hash": "71ba8e3da0bddb1fb4356d8dad2a44c86316c0dd620eb29687f8009a27995122"
+  },
+  {
+    "index": 46,
+    "timestamp": "2026-06-14T07:05:07.917074Z",
+    "action": "ANONYMISE",
+    "dataset_id": 4,
+    "pii_type": "ADDRESS",
+    "anonymisation_method": "MASK",
+    "records_affected": 15,
+    "payload": {
+      "column": "address"
+    },
+    "previous_hash": "71ba8e3da0bddb1fb4356d8dad2a44c86316c0dd620eb29687f8009a27995122",
+    "block_hash": "0ecead04c908a03a49f2b955cd41033200f2b18f3789035be7917eef56bf5f20"
+  },
+  {
+    "index": 47,
+    "timestamp": "2026-06-14T07:05:07.938975Z",
+    "action": "ANONYMISE",
+    "dataset_id": 4,
+    "pii_type": "ADDRESS",
+    "anonymisation_method": "MASK",
+    "records_affected": 15,
+    "payload": {
+      "column": "city"
+    },
+    "previous_hash": "0ecead04c908a03a49f2b955cd41033200f2b18f3789035be7917eef56bf5f20",
+    "block_hash": "235f7fb02740c65f919766a8bb868f410850ed5579fce9adc84bfce5e25ce21b"
+  },
+  {
+    "index": 48,
+    "timestamp": "2026-06-14T07:05:07.959092Z",
+    "action": "ANONYMISE",
+    "dataset_id": 4,
+    "pii_type": "ZIP_CODE",
+    "anonymisation_method": "MASK",
+    "records_affected": 15,
+    "payload": {
+      "column": "pincode"
+    },
+    "previous_hash": "235f7fb02740c65f919766a8bb868f410850ed5579fce9adc84bfce5e25ce21b",
+    "block_hash": "5835de011a4b3a59f848168681699381d589dc3a4b47662c28b57659b50dfcae"
+  },
+  {
+    "index": 49,
+    "timestamp": "2026-06-14T07:05:07.980556Z",
+    "action": "ANONYMISE",
+    "dataset_id": 4,
+    "pii_type": "DATE_OF_BIRTH",
+    "anonymisation_method": "MASK",
+    "records_affected": 15,
+    "payload": {
+      "column": "dob"
+    },
+    "previous_hash": "5835de011a4b3a59f848168681699381d589dc3a4b47662c28b57659b50dfcae",
+    "block_hash": "aacfa0377efc37ac8c6269f2536b37a15a730a6d388720398d5ff611324dc68a"
+  },
+  {
+    "index": 50,
+    "timestamp": "2026-06-14T07:05:08.003028Z",
+    "action": "ANONYMISE",
+    "dataset_id": 4,
+    "pii_type": "PAN",
+    "anonymisation_method": "HASH",
+    "records_affected": 15,
+    "payload": {
+      "column": "pan_number"
+    },
+    "previous_hash": "aacfa0377efc37ac8c6269f2536b37a15a730a6d388720398d5ff611324dc68a",
+    "block_hash": "68ec52eff1e1fd45cc7560de1c6633840467f239abe2ba1f06b18b3e40193a04"
+  },
+  {
+    "index": 51,
+    "timestamp": "2026-06-14T07:05:08.024330Z",
+    "action": "ANONYMISE",
+    "dataset_id": 4,
+    "pii_type": "AADHAAR",
+    "anonymisation_method": "HASH",
+    "records_affected": 15,
+    "payload": {
+      "column": "aadhaar"
+    },
+    "previous_hash": "68ec52eff1e1fd45cc7560de1c6633840467f239abe2ba1f06b18b3e40193a04",
+    "block_hash": "30ce3f083ea5ba532c8d9d59884b5840aaa619a925ca002c8c01a1423503dd01"
+  },
+  {
+    "index": 52,
+    "timestamp": "2026-06-14T07:05:08.046829Z",
+    "action": "ANONYMISE",
+    "dataset_id": 4,
+    "pii_type": "PHONE",
+    "anonymisation_method": "HASH",
+    "records_affected": 15,
+    "payload": {
+      "column": "credit_card"
+    },
+    "previous_hash": "30ce3f083ea5ba532c8d9d59884b5840aaa619a925ca002c8c01a1423503dd01",
+    "block_hash": "00056fb9e1e2a477a7986592e648cea186f4a0b57071ad7335e46c2dac8440b1"
+  },
+  {
+    "index": 53,
+    "timestamp": "2026-06-14T07:05:08.069106Z",
+    "action": "ANONYMISE",
+    "dataset_id": 4,
+    "pii_type": "ZIP_CODE",
+    "anonymisation_method": "MASK",
+    "records_affected": 15,
+    "payload": {
+      "column": "total_spent"
+    },
+    "previous_hash": "00056fb9e1e2a477a7986592e648cea186f4a0b57071ad7335e46c2dac8440b1",
+    "block_hash": "c33e0276c004fb7929b22c41f6f94502fef693b8567fd6a7977223b874aaf6b3"
+  },
+  {
+    "index": 54,
+    "timestamp": "2026-06-14T07:05:08.090036Z",
+    "action": "ANONYMISE",
+    "dataset_id": 4,
+    "pii_type": "DATE_OF_BIRTH",
+    "anonymisation_method": "MASK",
+    "records_affected": 15,
+    "payload": {
+      "column": "last_purchase_date"
+    },
+    "previous_hash": "c33e0276c004fb7929b22c41f6f94502fef693b8567fd6a7977223b874aaf6b3",
+    "block_hash": "9314312e57421a15362d22ccb29e32782d6b7c4bceb0bc8004d017c529014a4d"
+  },
+  {
+    "index": 55,
+    "timestamp": "2026-06-14T07:05:08.111495Z",
+    "action": "ANONYMISE",
+    "dataset_id": 4,
+    "pii_type": "IP_ADDRESS",
+    "anonymisation_method": "MASK",
+    "records_affected": 15,
+    "payload": {
+      "column": "membership_tier"
+    },
+    "previous_hash": "9314312e57421a15362d22ccb29e32782d6b7c4bceb0bc8004d017c529014a4d",
+    "block_hash": "ee2cefa7a1e87204c3091de1026054ab126aed1184ee0a7c1344e2b166b804c4"
+  },
+  {
+    "index": 56,
+    "timestamp": "2026-06-14T07:05:12.242779Z",
+    "action": "DOWNLOAD",
+    "dataset_id": 4,
+    "pii_type": null,
+    "anonymisation_method": null,
+    "records_affected": 0,
+    "payload": {
+      "file": "anonymised_4.csv"
+    },
+    "previous_hash": "ee2cefa7a1e87204c3091de1026054ab126aed1184ee0a7c1344e2b166b804c4",
+    "block_hash": "9d868ac5ce4dabfb58ab03b544c87f7233f9245d547b495dec2518abfa5db115"
+  },
+  {
+    "index": 57,
+    "timestamp": "2026-07-09T15:26:12.587163Z",
+    "action": "UPLOAD",
+    "dataset_id": 5,
+    "pii_type": null,
+    "anonymisation_method": null,
+    "records_affected": 0,
+    "payload": {
+      "filename": "Amazon Sale Report.csv",
+      "rows": 128975,
+      "path": "./data/uploads\\03eaac2f-f132-4adc-84c7-3d30da068a16.csv"
+    },
+    "previous_hash": "9d868ac5ce4dabfb58ab03b544c87f7233f9245d547b495dec2518abfa5db115",
+    "block_hash": "83f5901d03a80534f471e5c6f2d9ecf8dece3168a75b983de1107c8885791924"
+  },
+  {
+    "index": 58,
+    "timestamp": "2026-07-13T05:59:19.369646Z",
+    "action": "UPLOAD",
+    "dataset_id": 6,
+    "pii_type": null,
+    "anonymisation_method": null,
+    "records_affected": 0,
+    "payload": {
+      "filename": "Amazon Sale Report.csv",
+      "rows": 128975,
+      "path": "./data/uploads\\d8c4418f-32b5-4ed2-9ad8-39e8964b0173.csv"
+    },
+    "previous_hash": "83f5901d03a80534f471e5c6f2d9ecf8dece3168a75b983de1107c8885791924",
+    "block_hash": "3a118783663f8c2b3476e2d3c89c9c2b64c4b8474d6984ce9304cfcf631639ee"
+  },
+  {
+    "index": 59,
+    "timestamp": "2026-07-13T06:06:44.728905Z",
+    "action": "DETECT",
+    "dataset_id": 6,
+    "pii_type": null,
+    "anonymisation_method": null,
+    "records_affected": 726171,
+    "payload": {
+      "columns_with_pii": [
+        "Order ID",
+        "ship-service-level",
+        "ship-city",
+        "ship-state",
+        "ship-postal-code",
+        "ship-country",
+        "promotion-ids",
+        "Unnamed: 22"
+      ],
+      "total_pii_cells": 726171
+    },
+    "previous_hash": "3a118783663f8c2b3476e2d3c89c9c2b64c4b8474d6984ce9304cfcf631639ee",
+    "block_hash": "6ebdee232886eb276a0b39ee3c1cd2ad7be7f9a35060b17b9a2f6a0c13a0a2ff"
+  },
+  {
+    "index": 60,
+    "timestamp": "2026-07-13T06:07:12.608184Z",
+    "action": "ANONYMISE",
+    "dataset_id": 6,
+    "pii_type": "PHONE",
+    "anonymisation_method": "MASK",
+    "records_affected": 128975,
+    "payload": {
+      "column": "Order ID"
+    },
+    "previous_hash": "6ebdee232886eb276a0b39ee3c1cd2ad7be7f9a35060b17b9a2f6a0c13a0a2ff",
+    "block_hash": "200067b27cc758979eddacf17658b9a1faad2f5a2887fe8efb5dc48a322ba7d7"
+  },
+  {
+    "index": 61,
+    "timestamp": "2026-07-13T06:07:12.634704Z",
+    "action": "ANONYMISE",
+    "dataset_id": 6,
+    "pii_type": "IP_ADDRESS",
+    "anonymisation_method": "MASK",
+    "records_affected": 128975,
+    "payload": {
+      "column": "ship-service-level"
+    },
+    "previous_hash": "200067b27cc758979eddacf17658b9a1faad2f5a2887fe8efb5dc48a322ba7d7",
+    "block_hash": "00ba636f03c04c409eb589abfa1ac3b1a369977c83aaa171817bb720ac99ed84"
+  },
+  {
+    "index": 62,
+    "timestamp": "2026-07-13T06:07:12.662625Z",
+    "action": "ANONYMISE",
+    "dataset_id": 6,
+    "pii_type": "ZIP_CODE",
+    "anonymisation_method": "MASK",
+    "records_affected": 128942,
+    "payload": {
+      "column": "ship-city"
+    },
+    "previous_hash": "00ba636f03c04c409eb589abfa1ac3b1a369977c83aaa171817bb720ac99ed84",
+    "block_hash": "b19e41216755b6971eeb7c1765e2f473bd77585c7e69c9cd53f1f45d10c18844"
+  },
+  {
+    "index": 63,
+    "timestamp": "2026-07-13T06:07:12.684784Z",
+    "action": "ANONYMISE",
+    "dataset_id": 6,
+    "pii_type": "IP_ADDRESS",
+    "anonymisation_method": "MASK",
+    "records_affected": 128942,
+    "payload": {
+      "column": "ship-state"
+    },
+    "previous_hash": "b19e41216755b6971eeb7c1765e2f473bd77585c7e69c9cd53f1f45d10c18844",
+    "block_hash": "6ecc206b667badeab517ca0ffb78d46387c23b44ed3b2e24531015dc0e19a360"
+  },
+  {
+    "index": 64,
+    "timestamp": "2026-07-13T06:07:12.706878Z",
+    "action": "ANONYMISE",
+    "dataset_id": 6,
+    "pii_type": "ZIP_CODE",
+    "anonymisation_method": "MASK",
+    "records_affected": 128942,
+    "payload": {
+      "column": "ship-postal-code"
+    },
+    "previous_hash": "6ecc206b667badeab517ca0ffb78d46387c23b44ed3b2e24531015dc0e19a360",
+    "block_hash": "0c6842c7701a784543b2c8507b5e59d157881cccad9a00ebae9bdc4e8b6bb6bf"
+  },
+  {
+    "index": 65,
+    "timestamp": "2026-07-13T06:07:12.729295Z",
+    "action": "ANONYMISE",
+    "dataset_id": 6,
+    "pii_type": "IP_ADDRESS",
+    "anonymisation_method": "MASK",
+    "records_affected": 128942,
+    "payload": {
+      "column": "ship-country"
+    },
+    "previous_hash": "0c6842c7701a784543b2c8507b5e59d157881cccad9a00ebae9bdc4e8b6bb6bf",
+    "block_hash": "8ac33e7eae3019638de869a218b2eec5e4bcf6a4e4fd4963a63c60c7b312030e"
+  },
+  {
+    "index": 66,
+    "timestamp": "2026-07-13T06:07:12.751466Z",
+    "action": "ANONYMISE",
+    "dataset_id": 6,
+    "pii_type": "ZIP_CODE",
+    "anonymisation_method": "MASK",
+    "records_affected": 79822,
+    "payload": {
+      "column": "promotion-ids"
+    },
+    "previous_hash": "8ac33e7eae3019638de869a218b2eec5e4bcf6a4e4fd4963a63c60c7b312030e",
+    "block_hash": "b9f556115c78da8779823970ef70366e4fabf3d768769a7378f37fce22066b61"
+  },
+  {
+    "index": 67,
+    "timestamp": "2026-07-13T06:07:12.773534Z",
+    "action": "ANONYMISE",
+    "dataset_id": 6,
+    "pii_type": "NAME",
+    "anonymisation_method": "MASK",
+    "records_affected": 79925,
+    "payload": {
+      "column": "Unnamed: 22"
+    },
+    "previous_hash": "b9f556115c78da8779823970ef70366e4fabf3d768769a7378f37fce22066b61",
+    "block_hash": "6013eb729a07fd569fcf64eb70e664ab05a754bb6e6e5d826601fc123fd685a3"
+  },
+  {
+    "index": 68,
+    "timestamp": "2026-07-13T06:08:01.946406Z",
+    "action": "DOWNLOAD",
+    "dataset_id": 6,
+    "pii_type": null,
+    "anonymisation_method": null,
+    "records_affected": 0,
+    "payload": {
+      "file": "anonymised_6.csv"
+    },
+    "previous_hash": "6013eb729a07fd569fcf64eb70e664ab05a754bb6e6e5d826601fc123fd685a3",
+    "block_hash": "241147c7d61f4f5bc9a70da72e6bc85e7fc50221fff218350f35c224f7c6ca1d"
+  },
+  {
+    "index": 69,
+    "timestamp": "2026-07-13T06:09:07.445469Z",
+    "action": "UPLOAD",
+    "dataset_id": 7,
+    "pii_type": null,
+    "anonymisation_method": null,
+    "records_affected": 0,
+    "payload": {
+      "filename": "E-commerce Customer Behavior - Sheet1.csv",
+      "rows": 350,
+      "path": "./data/uploads\\ed0bb59a-8bcb-4f20-8407-b86fb854b51c.csv"
+    },
+    "previous_hash": "241147c7d61f4f5bc9a70da72e6bc85e7fc50221fff218350f35c224f7c6ca1d",
+    "block_hash": "92c8276d13ee0e68a0115ef420ebd938c28d8928b2dfa970d92fb9f33f540dd3"
+  },
+  {
+    "index": 70,
+    "timestamp": "2026-07-13T06:09:12.678607Z",
+    "action": "DETECT",
+    "dataset_id": 7,
+    "pii_type": null,
+    "anonymisation_method": null,
+    "records_affected": 700,
+    "payload": {
+      "columns_with_pii": [
+        "City",
+        "Membership Type"
+      ],
+      "total_pii_cells": 700
+    },
+    "previous_hash": "92c8276d13ee0e68a0115ef420ebd938c28d8928b2dfa970d92fb9f33f540dd3",
+    "block_hash": "04bcf5ee96edfbbd854f7efdadd8e3ae324b79ecd2714239e1edfa7a7f0ff2e4"
+  },
+  {
+    "index": 71,
+    "timestamp": "2026-07-13T06:09:23.988710Z",
+    "action": "ANONYMISE",
+    "dataset_id": 7,
+    "pii_type": "ADDRESS",
+    "anonymisation_method": "HASH",
+    "records_affected": 350,
+    "payload": {
+      "column": "City"
+    },
+    "previous_hash": "04bcf5ee96edfbbd854f7efdadd8e3ae324b79ecd2714239e1edfa7a7f0ff2e4",
+    "block_hash": "1d90d44da6461452d34b1d054cbc2f564354831569bd0d1b02a13a5e61e0cfb4"
+  },
+  {
+    "index": 72,
+    "timestamp": "2026-07-13T06:09:24.012167Z",
+    "action": "ANONYMISE",
+    "dataset_id": 7,
+    "pii_type": "IP_ADDRESS",
+    "anonymisation_method": "ENCRYPT",
+    "records_affected": 350,
+    "payload": {
+      "column": "Membership Type"
+    },
+    "previous_hash": "1d90d44da6461452d34b1d054cbc2f564354831569bd0d1b02a13a5e61e0cfb4",
+    "block_hash": "738d4506fd4bbfec48e01c9fd31c40bb5dd61dc8a177adbd04948e1b25f3cc18"
+  },
+  {
+    "index": 73,
+    "timestamp": "2026-07-13T06:09:31.050678Z",
+    "action": "DOWNLOAD",
+    "dataset_id": 7,
+    "pii_type": null,
+    "anonymisation_method": null,
+    "records_affected": 0,
+    "payload": {
+      "file": "anonymised_7.csv"
+    },
+    "previous_hash": "738d4506fd4bbfec48e01c9fd31c40bb5dd61dc8a177adbd04948e1b25f3cc18",
+    "block_hash": "7487a087eb1771e31117e6898a73b4db6848b72d780be58053b2bbf7d6ab6d57"
+  },
+  {
+    "index": 74,
+    "timestamp": "2026-07-20T08:29:57.697371Z",
+    "action": "UPLOAD",
+    "dataset_id": 8,
+    "pii_type": null,
+    "anonymisation_method": null,
+    "records_affected": 0,
+    "payload": {
+      "filename": "Amazon Sale Report.csv",
+      "rows": 128975,
+      "path": "./data/uploads\\82007a7d-4073-42a9-9215-da1bcd3e802f.csv"
+    },
+    "previous_hash": "7487a087eb1771e31117e6898a73b4db6848b72d780be58053b2bbf7d6ab6d57",
+    "block_hash": "f791f59a62870d995ef2fcbc8693a30158cbbc85c5f952dcfa575b260b8a21ae"
+  },
+  {
+    "index": 75,
+    "timestamp": "2026-07-20T08:31:54.830634Z",
+    "action": "DETECT",
+    "dataset_id": 8,
+    "pii_type": null,
+    "anonymisation_method": null,
+    "records_affected": 726171,
+    "payload": {
+      "columns_with_pii": [
+        "Order ID",
+        "ship-service-level",
+        "ship-city",
+        "ship-state",
+        "ship-postal-code",
+        "ship-country",
+        "promotion-ids",
+        "Unnamed: 22"
+      ],
+      "total_pii_cells": 726171
+    },
+    "previous_hash": "f791f59a62870d995ef2fcbc8693a30158cbbc85c5f952dcfa575b260b8a21ae",
+    "block_hash": "c328e273e5b94dfedc269d8c7fb0bb3b404fcf34fe3d2eae4d80f95e367ac8e2"
+  },
+  {
+    "index": 76,
+    "timestamp": "2026-07-20T08:32:11.187802Z",
+    "action": "ANONYMISE",
+    "dataset_id": 8,
+    "pii_type": "PHONE",
+    "anonymisation_method": "MASK",
+    "records_affected": 128975,
+    "payload": {
+      "column": "Order ID"
+    },
+    "previous_hash": "c328e273e5b94dfedc269d8c7fb0bb3b404fcf34fe3d2eae4d80f95e367ac8e2",
+    "block_hash": "d9367be0692209a8a56c37e1d0dbc0d6410228b603f3017dc6f98906bfb3be42"
+  },
+  {
+    "index": 77,
+    "timestamp": "2026-07-20T08:32:11.211675Z",
+    "action": "ANONYMISE",
+    "dataset_id": 8,
+    "pii_type": "IP_ADDRESS",
+    "anonymisation_method": "MASK",
+    "records_affected": 128975,
+    "payload": {
+      "column": "ship-service-level"
+    },
+    "previous_hash": "d9367be0692209a8a56c37e1d0dbc0d6410228b603f3017dc6f98906bfb3be42",
+    "block_hash": "c13a37b07a8fb551d8a2a9ea6df872862f71d24c7c121526f0658fa098ec90a0"
+  },
+  {
+    "index": 78,
+    "timestamp": "2026-07-20T08:32:11.236836Z",
+    "action": "ANONYMISE",
+    "dataset_id": 8,
+    "pii_type": "ZIP_CODE",
+    "anonymisation_method": "MASK",
+    "records_affected": 128942,
+    "payload": {
+      "column": "ship-city"
+    },
+    "previous_hash": "c13a37b07a8fb551d8a2a9ea6df872862f71d24c7c121526f0658fa098ec90a0",
+    "block_hash": "7eded5d5caba193cc46b6876989c6d7e823c8fce19e8e73acb0a091ce9a6fe04"
+  },
+  {
+    "index": 79,
+    "timestamp": "2026-07-20T08:32:11.261162Z",
+    "action": "ANONYMISE",
+    "dataset_id": 8,
+    "pii_type": "IP_ADDRESS",
+    "anonymisation_method": "MASK",
+    "records_affected": 128942,
+    "payload": {
+      "column": "ship-state"
+    },
+    "previous_hash": "7eded5d5caba193cc46b6876989c6d7e823c8fce19e8e73acb0a091ce9a6fe04",
+    "block_hash": "0c9a278517b21ac6c20e41b2b5bf20ea64d8f35a73b17c5b52ac9ceafed4f0d1"
+  },
+  {
+    "index": 80,
+    "timestamp": "2026-07-20T08:32:11.285953Z",
+    "action": "ANONYMISE",
+    "dataset_id": 8,
+    "pii_type": "ZIP_CODE",
+    "anonymisation_method": "MASK",
+    "records_affected": 128942,
+    "payload": {
+      "column": "ship-postal-code"
+    },
+    "previous_hash": "0c9a278517b21ac6c20e41b2b5bf20ea64d8f35a73b17c5b52ac9ceafed4f0d1",
+    "block_hash": "e322518ee8045dd3c725283591a99e606b1124371326e96a5aa504cc2b65edae"
+  },
+  {
+    "index": 81,
+    "timestamp": "2026-07-20T08:32:11.310614Z",
+    "action": "ANONYMISE",
+    "dataset_id": 8,
+    "pii_type": "IP_ADDRESS",
+    "anonymisation_method": "MASK",
+    "records_affected": 128942,
+    "payload": {
+      "column": "ship-country"
+    },
+    "previous_hash": "e322518ee8045dd3c725283591a99e606b1124371326e96a5aa504cc2b65edae",
+    "block_hash": "abc3bc30d97f4533e3111a596c51684838e4f00377fef274c593bd31d572fe51"
+  },
+  {
+    "index": 82,
+    "timestamp": "2026-07-20T08:32:11.335274Z",
+    "action": "ANONYMISE",
+    "dataset_id": 8,
+    "pii_type": "ZIP_CODE",
+    "anonymisation_method": "MASK",
+    "records_affected": 79822,
+    "payload": {
+      "column": "promotion-ids"
+    },
+    "previous_hash": "abc3bc30d97f4533e3111a596c51684838e4f00377fef274c593bd31d572fe51",
+    "block_hash": "2f733fdd3f94d5113393ab132a1097acd1f3d48202e58f95a6be969cf93fa0be"
+  },
+  {
+    "index": 83,
+    "timestamp": "2026-07-20T08:32:11.360937Z",
+    "action": "ANONYMISE",
+    "dataset_id": 8,
+    "pii_type": "NAME",
+    "anonymisation_method": "MASK",
+    "records_affected": 79925,
+    "payload": {
+      "column": "Unnamed: 22"
+    },
+    "previous_hash": "2f733fdd3f94d5113393ab132a1097acd1f3d48202e58f95a6be969cf93fa0be",
+    "block_hash": "ee2c3adaa9eebfaab8af2f9dd80f212b659be32a85a81ce23cf4c267bb358e38"
+  },
+  {
+    "index": 84,
+    "timestamp": "2026-07-20T08:36:02.305746Z",
+    "action": "DOWNLOAD",
+    "dataset_id": 8,
+    "pii_type": null,
+    "anonymisation_method": null,
+    "records_affected": 0,
+    "payload": {
+      "file": "anonymised_8.csv"
+    },
+    "previous_hash": "ee2c3adaa9eebfaab8af2f9dd80f212b659be32a85a81ce23cf4c267bb358e38",
+    "block_hash": "d9310c7773de2c56b97c20bdefbd2de6ca6c763b2d7803956f3c6fd17b5f8c49"
+  }
+]

@@ -1,0 +1,161 @@
+/*
+  PIISHIELD VISUAL POLISH
+  ------------------------
+  How to use: paste this entire block inside a <style> tag at the END
+  of your <head> section in index.html (after your existing styles),
+  so these rules override the defaults with a more polished look.
+
+  These target common class/element patterns based on your dashboard
+  screenshots. If a selector doesn't visually change anything, your
+  actual class names differ slightly — tell me the real class names
+  and I'll adjust this precisely.
+*/
+
+:root {
+  --ps-primary: #4f46e5;
+  --ps-primary-dark: #3730a3;
+  --ps-primary-light: #eef2ff;
+  --ps-accent: #06b6d4;
+  --ps-success: #10b981;
+  --ps-danger: #ef4444;
+  --ps-warning: #f59e0b;
+  --ps-bg: #f8fafc;
+  --ps-card: #ffffff;
+  --ps-border: #e2e8f0;
+  --ps-text: #0f172a;
+  --ps-text-muted: #64748b;
+  --ps-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --ps-shadow-lg: 0 10px 25px rgba(79,70,229,0.08), 0 4px 10px rgba(0,0,0,0.03);
+}
+
+body {
+  background: var(--ps-bg) !important;
+}
+
+/* Sidebar — gradient accent instead of flat white */
+.sidebar, nav, aside {
+  background: linear-gradient(180deg, #ffffff 0%, #fafbff 100%) !important;
+  border-right: 1px solid var(--ps-border) !important;
+}
+
+/* Sidebar active/selected nav item */
+.sidebar a.active, .nav-item.active, .sidebar-link.active {
+  background: linear-gradient(135deg, var(--ps-primary-light), #e0e7ff) !important;
+  color: var(--ps-primary-dark) !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+}
+
+/* Logo badge */
+.logo, .logo-icon {
+  background: linear-gradient(135deg, var(--ps-primary), var(--ps-accent)) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(79,70,229,0.3) !important;
+}
+
+/* Stat cards on dashboard */
+.stat-card, .card, .metric-card {
+  background: var(--ps-card) !important;
+  border: 1px solid var(--ps-border) !important;
+  border-radius: 14px !important;
+  box-shadow: var(--ps-shadow) !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.stat-card:hover, .card:hover, .metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ps-shadow-lg) !important;
+}
+
+/* Big numbers on stat cards */
+.stat-value, .stat-number, .metric-value {
+  background: linear-gradient(135deg, var(--ps-primary), var(--ps-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800 !important;
+}
+
+/* Tables */
+table {
+  border-radius: 12px !important;
+  overflow: hidden;
+  box-shadow: var(--ps-shadow) !important;
+}
+thead, th {
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9) !important;
+  color: var(--ps-text-muted) !important;
+  font-size: 11px !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase !important;
+}
+tbody tr:hover {
+  background: var(--ps-primary-light) !important;
+}
+
+/* Status dots/badges */
+.status-completed, .badge-success { color: var(--ps-success) !important; }
+.status-detecting, .badge-warning { color: var(--ps-warning) !important; }
+.status-uploaded, .badge-info { color: var(--ps-accent) !important; }
+.status-failed, .badge-danger { color: var(--ps-danger) !important; }
+
+/* Buttons */
+button, .btn {
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  transition: all 0.15s ease !important;
+}
+.btn-primary, button[type="submit"] {
+  background: linear-gradient(135deg, var(--ps-primary), var(--ps-primary-dark)) !important;
+  border: none !important;
+  color: white !important;
+  box-shadow: 0 2px 8px rgba(79,70,229,0.25) !important;
+}
+.btn-primary:hover, button[type="submit"]:hover {
+  box-shadow: 0 4px 14px rgba(79,70,229,0.35) !important;
+  transform: translateY(-1px);
+}
+
+/* Audit chain block cards */
+.block-card, .audit-block {
+  background: var(--ps-card) !important;
+  border: 1px solid var(--ps-border) !important;
+  border-radius: 12px !important;
+  border-left: 3px solid var(--ps-primary) !important;
+  box-shadow: var(--ps-shadow) !important;
+  transition: border-color 0.15s ease;
+}
+.block-card:hover, .audit-block:hover {
+  border-left-color: var(--ps-accent) !important;
+}
+
+/* Block index badge (#0, #1, #2...) */
+.block-index {
+  background: linear-gradient(135deg, var(--ps-primary), var(--ps-accent)) !important;
+  color: white !important;
+  border-radius: 6px !important;
+  font-weight: 700 !important;
+}
+
+/* Chain verified success banner */
+.chain-verified, .integrity-ok {
+  background: linear-gradient(135deg, #ecfdf5, #d1fae5) !important;
+  border: 1px solid #6ee7b7 !important;
+  border-radius: 12px !important;
+  color: #065f46 !important;
+}
+
+/* Page headings */
+h1, .page-title {
+  color: var(--ps-text) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.5px !important;
+}
+
+/* Scrollbar polish (Chrome/Edge) */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }

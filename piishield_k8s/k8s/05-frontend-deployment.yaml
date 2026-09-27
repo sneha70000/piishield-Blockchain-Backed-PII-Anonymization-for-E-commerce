@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: piishield-frontend
+  namespace: piishield
+  labels:
+    app: piishield-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: piishield-frontend
+  template:
+    metadata:
+      labels:
+        app: piishield-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: piishield-frontend:latest   # build via frontend-docker/Dockerfile
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: piishield-frontend
+  namespace: piishield
+spec:
+  selector:
+    app: piishield-frontend
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP

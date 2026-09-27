@@ -1,0 +1,14 @@
+backend/venv/
+backend/__pycache__/
+backend/*.pyc
+backend/.env
+backend/*.db
+backend/*.sqlite
+backend/data/uploads/
+backend/data/anonymised/
+piishield-bridge/data/
+piishield-bridge/node_modules/
+*.log
+nohup.out
+.DS_Store
+Thumbs.db
