@@ -48,6 +48,8 @@
   .ds-stat-val{font-weight:600;color:#7c3aed;}
   .view-btn{width:100%;margin-top:12px;padding:8px;background:#7c3aed;color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);}
   .view-btn:hover{background:#6d28d9;}
+  .download-btn{width:100%;margin-top:8px;padding:8px;background:var(--white);color:#7c3aed;border:1px solid #7c3aed;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .2s;}
+  .download-btn:hover{background:#faf5ff;}
 
   /* Detail view */
   .detail-view{display:none;}
@@ -199,7 +201,6 @@ async function load() {
     document.getElementById('s-pii').textContent = (stats.total_pii_detections ?? 0).toLocaleString();
     document.getElementById('s-blocks').textContent = verify.total_blocks ?? 0;
 
-    // Load all detections for global charts
     let allPiiTypes = {}, allMethods = {};
     for (const d of globalDatasets) {
       try {
@@ -211,7 +212,6 @@ async function load() {
       } catch {}
     }
 
-    // Global PII type chart
     destroyChart('piiTypeChart');
     const piiKeys = Object.keys(allPiiTypes).sort((a,b)=>allPiiTypes[b]-allPiiTypes[a]);
     if (piiKeys.length > 0) {
@@ -225,7 +225,6 @@ async function load() {
       });
     }
 
-    // Global method chart
     destroyChart('methodChart');
     const methodKeys = Object.keys(allMethods);
     if (methodKeys.length > 0) {
@@ -239,7 +238,6 @@ async function load() {
       });
     }
 
-    // Dataset cards
     const container = document.getElementById('dataset-cards');
     if (globalDatasets.length === 0) {
       container.innerHTML = '<p style="color:var(--muted);font-size:13px">No completed datasets yet. Process one from the Admin panel first.</p>';
@@ -253,11 +251,33 @@ async function load() {
         <div class="ds-stat"><span>PII fields protected</span><span class="ds-stat-val">${d.pii_detected?.toLocaleString()}</span></div>
         <div class="ds-stat"><span>Status</span><span class="ds-stat-val" style="color:#10b981">Anonymised</span></div>
         <button class="view-btn">View charts & summary</button>
+        <button class="download-btn" onclick="event.stopPropagation(); downloadDataset(${d.id}, '${d.filename}')">Download Anonymised File</button>
       </div>`).join('')}</div>`;
 
   } catch(e) {
     console.error(e);
     document.getElementById('dataset-cards').textContent = 'Could not connect to API.';
+  }
+}
+
+async function downloadDataset(id, filename) {
+  try {
+    const r = await fetch(`${API}/download/${id}`, { headers: { 'X-API-Key': TOKEN } });
+    if (!r.ok) {
+      alert('Failed to download dataset.');
+      return;
+    }
+    const blob = await r.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `anonymised_${filename}`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (e) {
+    alert('Error connecting to download server.');
   }
 }
 
@@ -268,7 +288,6 @@ async function showDetail(id) {
   const dataset = globalDatasets.find(d => d.id === id);
   if (!dataset) return;
 
-  // Summary box
   document.getElementById('detail-summary').innerHTML = `
     <h3>Dataset Summary — ${dataset.filename}</h3>
     <p>
@@ -282,7 +301,6 @@ async function showDetail(id) {
     const result = await api(`/results/${id}`);
     const detections = result.detections || [];
 
-    // PII types chart
     const piiTypes = {};
     const methods = {};
     detections.forEach(d => {
@@ -301,7 +319,6 @@ async function showDetail(id) {
       options: { plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}, responsive:true }
     });
 
-    // Method chart
     destroyChart('detailMethodChart');
     const methodKeys = Object.keys(methods);
     chartInstances['detailMethodChart'] = new Chart(document.getElementById('detailMethodChart'), {
@@ -313,7 +330,6 @@ async function showDetail(id) {
       options: { plugins:{legend:{position:'bottom'}}, responsive:true }
     });
 
-    // Sensitive vs non-sensitive
     destroyChart('sensitiveChart');
     const sensitiveCount = detections.length;
     const totalCols = result.all_columns ? Object.keys(result.all_columns).length : detections.length + 3;
@@ -327,7 +343,6 @@ async function showDetail(id) {
       options: { plugins:{legend:{position:'bottom'}}, responsive:true }
     });
 
-    // PII bars
     const maxCount = Math.max(...detections.map(d=>d.count||0), 1);
     document.getElementById('pii-bars').innerHTML = detections.map(d=>`
       <div class="pii-bar-row">
@@ -336,7 +351,6 @@ async function showDetail(id) {
         <div class="pii-bar-count">${(d.count||0).toLocaleString()}</div>
       </div>`).join('');
 
-    // Detection table — no raw data
     document.getElementById('detail-table').innerHTML = detections.map(d=>`
       <tr>
         <td style="font-family:monospace;font-size:12px">${d.column}</td>
