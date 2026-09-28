@@ -6,36 +6,36 @@
 <title>PIIShield — Audit Chain</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root { --bg:#f5f6f8;--white:#fff;--border:#e2e5ea;--accent:#16a34a;--accent-light:#f0fdf4;--text:#111827;--muted:#6b7280;--shadow:0 1px 3px rgba(0,0,0,.08);--font:'Inter',sans-serif;--mono:'JetBrains Mono',monospace; }
+  :root { --bg:#f5f6f8;--white:#fff;--border:#e2e5ea;--accent:#90243f;--accent-light:#f0fdf4;--text:#111827;--muted:#6b7280;--shadow:0 1px 3px rgba(0,0,0,.08);--font:'Inter',sans-serif;--mono:'JetBrains Mono',monospace; }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--bg);font-family:var(--font);color:var(--text);}
   .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow);}
   .logo{display:flex;align-items:center;gap:10px;}
-  .logo-icon{width:34px;height:34px;background:#16a34a;border-radius:8px;display:flex;align-items:center;justify-content:center;}
+  .logo-icon{width:34px;height:34px;background:#90243f;border-radius:8px;display:flex;align-items:center;justify-content:center;}
   .logo-icon svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;}
   .logo-text{font-size:15px;font-weight:700;}
   .logo-sub{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;}
   .topbar-right{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted);}
-  .badge{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;}
+  .badge{background:#f0fdf4;color:#90243f;border:1px solid #90243f;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;}
   .btn-back{background:none;border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:12px;color:var(--muted);cursor:pointer;font-family:var(--font);}
-  .btn-back:hover{border-color:#16a34a;color:#16a34a;}
+  .btn-back:hover{border-color:#90243f;color:#90243f;}
   .content{padding:28px 32px;max-width:1000px;margin:0 auto;}
   .card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px;box-shadow:var(--shadow);}
   .card-title{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:14px;}
-  .chain-valid{color:#16a34a;font-weight:600;font-size:13px;}
-  .chain-invalid{color:#dc2626;font-weight:600;font-size:13px;}
+  .chain-valid{color:#90243f;font-weight:600;font-size:13px;}
+  .chain-invalid{color:#90243f;font-weight:600;font-size:13px;}
   .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
   .stat{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px 20px;box-shadow:var(--shadow);}
-  .stat-value{font-size:26px;font-weight:700;font-family:var(--mono);color:#16a34a;}
+  .stat-value{font-size:26px;font-weight:700;font-family:var(--mono);color:#90243f;}
   .stat-label{font-size:12px;color:var(--muted);margin-top:4px;}
   .block{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:flex-start;gap:14px;box-shadow:var(--shadow);}
-  .block-index{font-family:var(--mono);font-size:11px;color:#16a34a;background:#f0fdf4;border-radius:4px;padding:2px 7px;flex-shrink:0;border:1px solid #bbf7d0;}
+  .block-index{font-family:var(--mono);font-size:11px;color:#90243f;background:#f7bbc6;border-radius:4px;padding:2px 7px;flex-shrink:0;border:1px solid #d96f96;}
   .block-action{font-weight:600;font-size:13px;}
   .block-hash{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:4px;word-break:break-all;}
   .block-time{font-size:11px;color:var(--muted);margin-top:2px;}
-  .badge-pii{background:#eff4ff;color:#1a56db;border:1px solid #c7d9f8;border-radius:20px;padding:2px 8px;font-size:11px;font-weight:600;}
-  .badge-method{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0;border-radius:20px;padding:2px 8px;font-size:11px;font-weight:600;margin-left:4px;}
-  .loader{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:#16a34a;border-radius:50%;animation:spin .7s linear infinite;}
+  .badge-pii{background:#f7bbc6;color:#90243f;border:1px solid #c7d9f8;border-radius:20px;padding:2px 8px;font-size:11px;font-weight:600;}
+  .badge-method{background:#f7bbc6;color:#90243f;border:1px solid #f7bbc6;border-radius:20px;padding:2px 8px;font-size:11px;font-weight:600;margin-left:4px;}
+  .loader{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:#90243f;border-radius:50%;animation:spin .7s linear infinite;}
   @keyframes spin{to{transform:rotate(360deg)}}
   .empty{text-align:center;padding:40px;color:var(--muted);}
 </style>
@@ -55,7 +55,7 @@
 <div class="content">
   <div class="stat-row">
     <div class="stat"><div class="stat-value" id="s-blocks">—</div><div class="stat-label">Total blocks</div></div>
-    <div class="stat"><div class="stat-value" id="s-valid" style="color:#111827">—</div><div class="stat-label">Chain integrity</div></div>
+    <div class="stat"><div class="stat-value" id="s-valid" style="color:#90243f">—</div><div class="stat-label">Chain integrity</div></div>
     <div class="stat"><div class="stat-value" id="s-datasets">—</div><div class="stat-label">Datasets processed</div></div>
   </div>
 
@@ -89,7 +89,7 @@ async function load() {
     const verify = await api('/audit/verify');
     document.getElementById('s-blocks').textContent = verify.total_blocks ?? 0;
     document.getElementById('s-valid').textContent = verify.valid ? 'Valid' : 'Broken';
-    document.getElementById('s-valid').style.color = verify.valid ? '#16a34a' : '#dc2626';
+    document.getElementById('s-valid').style.color = '#90243f';
     document.getElementById('verify-status').innerHTML = verify.valid
       ? `<span class="chain-valid">All ${verify.total_blocks} blocks verified — chain integrity confirmed</span>`
       : `<span class="chain-invalid">Chain broken at block ${verify.broken_at ?? '?'}</span>`;
@@ -115,8 +115,7 @@ async function load() {
         <div style="flex:1;min-width:0">
           <div class="block-action">${b.action} <span style="font-weight:400;font-size:12px;color:var(--muted)">· dataset #${b.dataset_id}</span></div>
           ${b.pii_type ? `<div style="margin-top:5px">
-            <span class="badge-pii">${b.pii_type}</span>
-            ${b.anonymisation_method ? `<span class="badge-method">${b.anonymisation_method}</span>` : ''}
+            <span class="badge-pii">${b.pii_type}</span>${b.anonymisation_method ? `<span class="badge-method">${b.anonymisation_method}</span>` : ''}
             <span style="font-size:11px;color:var(--muted);margin-left:6px">${b.records_affected} records</span>
           </div>` : ''}
           <div class="block-hash" style="margin-top:5px">${b.block_hash}</div>
