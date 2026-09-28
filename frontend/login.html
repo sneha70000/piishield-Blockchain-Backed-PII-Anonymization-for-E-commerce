@@ -6,13 +6,13 @@
 <title>PIIShield — Sign In / Register</title>
 <style>
   :root {
-    --primary: #ff6a00;
-    --primary-dark: #e05200;
-    --accent: #111111;
-    --text-dark: #0f0f0f;
-    --text-muted: #6b6b6b;
-    --error: #dc2626;
-    --success: #16a34a;
+    --primary: #90243f;
+    --primary-dark: #90243f;
+    --accent: #90243f;
+    --text-dark: #90243f;
+    --text-muted: #90243f;
+    --error: #90243f;
+    --success: #90243f;
     --border: #e5c9ab;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -22,7 +22,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #000000, #1a1a1a, #000000);
+    background: linear-gradient(135deg, #ffffff, #ffffff, #ffffff);
     background-size: 200% 200%;
     animation: bgShift 12s ease infinite;
     overflow: hidden;
@@ -54,7 +54,7 @@
     position: relative;
     width: 100%;
     max-width: 780px;
-    min-height: 480px;
+    min-height: 680px;
     background: #ffffff;
     border-radius: 20px;
     box-shadow: 0 30px 80px rgba(0,0,0,0.4);
@@ -129,33 +129,33 @@
   .logo svg { width: 28px; height: 28px; fill: white; }
   .form-panel .logo { background: linear-gradient(135deg, var(--primary), var(--accent)); margin: 0 auto 16px; }
 
-  h1 { font-size: 22px; color: var(--text-dark); margin-bottom: 4px; text-align: center; }
+  h1 { font-size: 24px; color: var(--text-dark); margin-bottom: 4px; text-align: center; }
   .overlay-panel h1 { color: white; }
   .subtitle {
-    text-align: center; color: var(--text-muted); font-size: 12px;
+    text-align: center; color: var(--text-muted); font-size: 13.5px;
     margin-bottom: 24px; letter-spacing: 0.5px; text-transform: uppercase;
   }
-  .overlay-panel p { font-size: 14px; line-height: 1.6; opacity: 0.9; margin-bottom: 28px; }
+  .overlay-panel p { font-size: 16px; line-height: 1.6; opacity: 0.9; margin-bottom: 28px; }
 
   label {
-    display: block; font-size: 12px; font-weight: 600;
+    display: block; font-size: 13.5px; font-weight: 600;
     color: var(--text-dark); margin-bottom: 5px; margin-top: 14px;
   }
   input {
     width: 100%; padding: 11px 13px; border: 1.5px solid var(--border);
-    border-radius: 8px; font-size: 14px; transition: border-color 0.15s, box-shadow 0.15s;
+    border-radius: 8px; font-size: 16px; transition: border-color 0.15s, box-shadow 0.15s;
   }
   input:focus {
     outline: none; border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(255,106,0,0.22);
   }
-  .hint { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+  .hint { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
 
   button.primary-btn {
     width: 100%; margin-top: 22px; padding: 12px;
     background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     color: white; border: none; border-radius: 8px;
-    font-size: 14px; font-weight: 600; cursor: pointer;
+    font-size: 16px; font-weight: 600; cursor: pointer;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
   button.primary-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(255,106,0,0.5); }
@@ -166,18 +166,18 @@
     background: transparent;
     border: 1.5px solid rgba(255,255,255,0.7);
     color: white; border-radius: 24px;
-    font-size: 13px; font-weight: 600; cursor: pointer;
+    font-size: 14.5px; font-weight: 600; cursor: pointer;
     transition: background 0.2s ease, transform 0.15s ease;
   }
   button.ghost-btn:hover { background: rgba(255,255,255,0.15); transform: translateY(-1px); }
 
-  .msg { font-size: 12px; margin-top: 12px; text-align: center; min-height: 16px; }
+  .msg { font-size: 13.5px; margin-top: 12px; text-align: center; min-height: 16px; }
   .msg.error { color: var(--error); }
   .msg.success { color: var(--success); }
 
   .demo-hint {
     background: #f8fafc; border: 1px solid var(--border); border-radius: 8px;
-    padding: 8px 10px; font-size: 10.5px; color: var(--text-muted);
+    padding: 8px 10px; font-size: 12px; color: var(--text-muted);
     margin-top: 18px; text-align: center; line-height: 1.5;
   }
 
@@ -191,7 +191,7 @@
     }
     .container.show-register #loginPanel { opacity: 0; transform: translateY(-15px); pointer-events: none; }
     .container.show-register #registerPanel { opacity: 1; transform: translateY(0); pointer-events: auto; }
-    .mobile-switch { text-align: center; margin-top: 16px; font-size: 13px; }
+    .mobile-switch { text-align: center; margin-top: 16px; font-size: 14.5px; }
     .mobile-switch a { color: var(--primary); font-weight: 600; text-decoration: none; }
   }
   @media (min-width: 641px) {
@@ -220,7 +220,7 @@
       <input type="password" id="loginPassword" autocomplete="current-password" required>
 
       <button type="submit" class="primary-btn">Sign In</button>
-      <div style="text-align:right;margin-top:8px"><a href="forgot-password.html" style="font-size:12px;color:#4f46e5;text-decoration:none;font-weight:500">Forgot password?</a></div>
+      <div style="text-align:right;margin-top:8px"><a href="forgot-password.html" style="font-size: 13.5px;color:#4f46e5;text-decoration:none;font-weight:500">Forgot password?</a></div>
       <div class="msg error" id="loginError"></div>
 
       <div class="demo-hint">
@@ -242,7 +242,7 @@
       <input type="text" id="regCompany" required minlength="2" placeholder="e.g. Acme Corp">
 
       <label for="regRole">Panel / Role</label>
-      <select id="regRole" required style="width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;">
+      <select id="regRole" required style="width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:8px;font-size: 16px;">
         <option value="admin">Admin</option>
         <option value="auditor">Auditor</option>
         <option value="analyst">Data Scientist (Analytics)</option>
@@ -254,7 +254,7 @@
       <div class="hint">At least 8 characters, with 1 uppercase letter, 1 number, and 1 special character</div>
 
       <label for="regSecQ">Security Question</label>
-      <select id="regSecQ" style="width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;">
+      <select id="regSecQ" style="width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:8px;font-size: 16px;">
         <option>What was the name of your first pet?</option>
         <option>What city were you born in?</option>
         <option>What is your mother's maiden name?</option>
