@@ -777,15 +777,26 @@ function attachHandlers() {
 async function handleUpload(file) {
   if (!file) return;
   const status = document.getElementById('upload-status');
-  status.innerHTML = `<div class="flex gap-2"><span class="loader"></span> <span style="color:var(--text2)">Uploading ${file.name}...</span></div>`;
+  status.innerHTML = `<div class="flex gap-2" style="font-size:18px;justify-content:center;padding:24px;"><span class="loader" style="width:24px;height:24px;border-width:3px;"></span> <span style="color:var(--text2)">Uploading ${file.name}...</span></div>`;
   const fd = new FormData();
   fd.append('file', file);
   try {
     const r = await api('/upload', {method:'POST', body:fd});
     toast(`Uploaded "${r.filename}" (${r.total_rows.toLocaleString()} rows)`, 'success');
-    status.innerHTML = `<div style="color:var(--green);font-size: 15.5px">Upload complete &middot; <strong>${r.total_rows.toLocaleString()} rows</strong> &middot; <button class="btn btn-primary btn-sm" onclick="openProcess(${r.id})" style="margin-left:8px">Run detection</button></div>`;
+    
+    // Hide the drop zone completely
+    const dz = document.getElementById('drop-zone');
+    if (dz) dz.style.display = 'none';
+
+    // Show large format upload complete & large run detection button
+    status.innerHTML = `
+      <div style="text-align:center;padding:60px 20px;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border);">
+        <div style="font-size:26px;font-weight:700;color:var(--green);margin-bottom:12px;">Upload Complete!</div>
+        <div style="font-size:18px;color:var(--text2);margin-bottom:28px;">File: <strong>${r.filename}</strong> &middot; <strong>${r.total_rows.toLocaleString()} rows</strong></div>
+        <button class="btn btn-primary" style="padding:16px 36px;font-size:19px;" onclick="openProcess(${r.id})">Run detection</button>
+      </div>`;
   } catch(e) {
-    status.innerHTML = `<div style="color:var(--red)">Upload failed: ${e.message}</div>`;
+    status.innerHTML = `<div style="color:var(--red);font-size:17px;text-align:center;padding:20px;">Upload failed: ${e.message}</div>`;
   }
 }
 
