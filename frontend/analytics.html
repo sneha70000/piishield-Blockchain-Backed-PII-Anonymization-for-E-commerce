@@ -7,74 +7,74 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
-  :root{--bg:#f5f6f8;--white:#fff;--border:#e2e5ea;--accent:#7c3aed;--accent-light:#faf5ff;--text:#111827;--muted:#6b7280;--shadow:0 1px 3px rgba(0,0,0,.08);--font:'Inter',sans-serif;}
+  :root{--bg:#f5f6f8;--white:#fff;--border:#e2e5ea;--accent:#90243f;--accent-light:#fdf2f4;--text:#111827;--muted:#6b7280;--shadow:0 1px 3px rgba(0,0,0,.08);--font:'Inter',sans-serif;}
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--bg);font-family:var(--font);color:var(--text);}
   .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow);}
   .logo{display:flex;align-items:center;gap:10px;}
-  .logo-icon{width:34px;height:34px;background:#7c3aed;border-radius:8px;display:flex;align-items:center;justify-content:center;}
+  .logo-icon{width:34px;height:34px;background:#90243f;border-radius:8px;display:flex;align-items:center;justify-content:center;}
   .logo-icon svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;}
   .logo-text{font-size:15px;font-weight:700;}
   .logo-sub{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;}
-  .badge{background:#faf5ff;color:#6d28d9;border:1px solid #ddd6fe;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;}
+  .badge{background:#fdf2f4;color:#90243f;border:1px solid #f7d6dc;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;}
   .btn-back{background:none;border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:12px;color:var(--muted);cursor:pointer;font-family:var(--font);}
-  .btn-back:hover{border-color:#7c3aed;color:#7c3aed;}
+  .btn-back:hover{border-color:#90243f;color:#90243f;}
   .content{padding:28px 32px;max-width:1200px;margin:0 auto;}
-  .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px;}
-  .stat{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px 20px;box-shadow:var(--shadow);}
-  .stat-value{font-size:26px;font-weight:700;color:#7c3aed;}
-  .stat-label{font-size:12px;color:var(--muted);margin-top:4px;}
-  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
-  .card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;box-shadow:var(--shadow);margin-bottom:16px;}
-  .card-title{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:16px;}
-  .notice{background:#faf5ff;border:1px solid #ddd6fe;border-radius:8px;padding:12px 16px;font-size:13px;color:#5b21b6;margin-bottom:20px;display:flex;gap:10px;align-items:center;}
-  .tbl{width:100%;border-collapse:collapse;font-size:13px;}
-  .tbl th{text-align:left;padding:9px 12px;color:var(--muted);font-weight:500;border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;background:#f9fafb;}
-  .tbl td{padding:9px 12px;border-bottom:1px solid var(--border);}
+  .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:24px;}
+  .stat{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:22px 24px;box-shadow:var(--shadow);}
+  .stat-value{font-size:30px;font-weight:700;color:#90243f;}
+  .stat-label{font-size:13.5px;color:var(--muted);margin-top:6px;}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;}
+  .card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:26px;box-shadow:var(--shadow);margin-bottom:18px;}
+  .card-title{font-size:12.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:18px;}
+  .notice{background:#fdf2f4;border:1px solid #f7d6dc;border-radius:8px;padding:14px 18px;font-size:14px;color:#90243f;margin-bottom:20px;display:flex;gap:10px;align-items:center;}
+  .tbl{width:100%;border-collapse:collapse;font-size:14.5px;}
+  .tbl th{text-align:left;padding:10px 14px;color:var(--muted);font-weight:500;border-bottom:1px solid var(--border);font-size:12px;text-transform:uppercase;background:#f9fafb;}
+  .tbl td{padding:11px 14px;border-bottom:1px solid var(--border);}
   .tbl tr:last-child td{border-bottom:none;}
   .tbl tr:hover td{background:#f9fafb;}
-  .loader{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:#7c3aed;border-radius:50%;animation:spin .7s linear infinite;}
+  .loader{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:#90243f;border-radius:50%;animation:spin .7s linear infinite;}
   @keyframes spin{to{transform:rotate(360deg)}}
   .pii-hidden{background:#fef3c7;color:#92400e;border-radius:4px;padding:1px 7px;font-size:11px;font-weight:600;}
 
-  /* Dataset cards */
-  .dataset-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:16px;}
-  .dataset-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:18px;box-shadow:var(--shadow);cursor:pointer;transition:all .2s;}
-  .dataset-card:hover{border-color:#7c3aed;box-shadow:0 4px 16px rgba(124,58,237,.12);transform:translateY(-2px);}
-  .dataset-card h3{font-size:13px;font-weight:600;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .dataset-card .meta{font-size:11px;color:var(--muted);margin-bottom:12px;}
-  .ds-stat{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--border);}
+  /* Dataset cards - Larger & Increased Font */
+  .dataset-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-bottom:18px;}
+  .dataset-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:24px;box-shadow:var(--shadow);cursor:pointer;transition:all .2s;}
+  .dataset-card:hover{border-color:#90243f;box-shadow:0 6px 20px rgba(144,36,63,.14);transform:translateY(-2px);}
+  .dataset-card h3{font-size:16px;font-weight:600;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .dataset-card .meta{font-size:13px;color:var(--muted);margin-bottom:14px;}
+  .ds-stat{display:flex;justify-content:space-between;font-size:14px;padding:6px 0;border-bottom:1px solid var(--border);}
   .ds-stat:last-child{border-bottom:none;}
-  .ds-stat-val{font-weight:600;color:#7c3aed;}
-  .view-btn{width:100%;margin-top:12px;padding:8px;background:#7c3aed;color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);}
-  .view-btn:hover{background:#6d28d9;}
-  .download-btn{width:100%;margin-top:8px;padding:8px;background:var(--white);color:#7c3aed;border:1px solid #7c3aed;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .2s;}
-  .download-btn:hover{background:#faf5ff;}
+  .ds-stat-val{font-weight:600;color:#90243f;}
+  .view-btn{width:100%;margin-top:14px;padding:10px;background:#90243f;color:#fff;border:none;border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:var(--font);}
+  .view-btn:hover{background:#750848;}
+  .download-btn{width:100%;margin-top:10px;padding:10px;background:var(--white);color:#90243f;border:1px solid #90243f;border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .2s;}
+  .download-btn:hover{background:#fdf2f4;}
 
   /* Detail view */
   .detail-view{display:none;}
   .detail-view.active{display:block;}
   .overview.hidden{display:none;}
-  .back-btn{display:flex;align-items:center;gap:6px;background:none;border:1px solid var(--border);border-radius:6px;padding:7px 14px;font-size:12px;color:var(--muted);cursor:pointer;font-family:var(--font);margin-bottom:20px;}
-  .back-btn:hover{border-color:#7c3aed;color:#7c3aed;}
+  .back-btn{display:flex;align-items:center;gap:6px;background:none;border:1px solid var(--border);border-radius:6px;padding:8px 16px;font-size:13px;color:var(--muted);cursor:pointer;font-family:var(--font);margin-bottom:20px;}
+  .back-btn:hover{border-color:#90243f;color:#90243f;}
 
   /* Charts */
-  .chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
-  .chart-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;box-shadow:var(--shadow);}
-  .chart-card canvas{max-height:240px;}
+  .chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;}
+  .chart-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:26px;box-shadow:var(--shadow);}
+  .chart-card canvas{max-height:260px;}
 
   /* Summary box */
-  .summary-box{background:linear-gradient(135deg,#faf5ff,#ede9fe);border:1px solid #ddd6fe;border-radius:8px;padding:20px;margin-bottom:16px;}
-  .summary-box h3{font-size:14px;font-weight:700;color:#5b21b6;margin-bottom:10px;}
-  .summary-box p{font-size:13px;color:#6b7280;line-height:1.7;}
-  .summary-box .highlight{color:#7c3aed;font-weight:600;}
+  .summary-box{background:linear-gradient(135deg,#fdf2f4,#fae8ec);border:1px solid #f7d6dc;border-radius:10px;padding:24px;margin-bottom:18px;}
+  .summary-box h3{font-size:16px;font-weight:700;color:#90243f;margin-bottom:10px;}
+  .summary-box p{font-size:14.5px;color:#6b7280;line-height:1.7;}
+  .summary-box .highlight{color:#90243f;font-weight:600;}
 
   /* PII type bar */
-  .pii-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-  .pii-bar-label{font-size:12px;color:var(--text);width:120px;flex-shrink:0;}
-  .pii-bar-wrap{flex:1;background:#f3f4f6;border-radius:4px;height:8px;overflow:hidden;}
-  .pii-bar-fill{height:100%;border-radius:4px;background:#7c3aed;}
-  .pii-bar-count{font-size:11px;color:var(--muted);width:50px;text-align:right;}
+  .pii-bar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+  .pii-bar-label{font-size:13.5px;color:var(--text);width:130px;flex-shrink:0;}
+  .pii-bar-wrap{flex:1;background:#f3f4f6;border-radius:4px;height:10px;overflow:hidden;}
+  .pii-bar-fill{height:100%;border-radius:4px;background:#90243f;}
+  .pii-bar-count{font-size:12.5px;color:var(--muted);width:60px;text-align:right;}
 
   @media(max-width:720px){.chart-grid,.stat-row,.grid-2{grid-template-columns:1fr;}}
 </style>
@@ -91,11 +91,9 @@
   </div>
 </div>
 
-<div class="content">
-  <div class="notice">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L4 6v6c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V6L12 2z"/></svg>
-    You are viewing <strong>anonymised data only</strong>. Raw PII data is never shown here. Click any dataset to see its charts and summary.
-  </div>
+ 
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+    
 
   <!-- Overview -->
   <div class="overview" id="overview">
@@ -147,7 +145,7 @@
     <div class="grid-2">
       <div class="card">
         <div class="card-title">Sensitive vs non-sensitive columns</div>
-        <canvas id="sensitiveChart" style="max-height:200px"></canvas>
+        <canvas id="sensitiveChart" style="max-height:220px"></canvas>
       </div>
       <div class="card">
         <div class="card-title">PII fields by column</div>
@@ -184,7 +182,7 @@ async function api(path) {
   return r.json();
 }
 
-const COLORS = ['#7c3aed','#06b6d4','#10b981','#f59e0b','#ef4444','#3b82f6','#ec4899','#8b5cf6','#14b8a6','#f97316'];
+const COLORS = ['#90243f','#06b6d4','#10b981','#f59e0b','#ef4444','#3b82f6','#ec4899','#8b5cf6','#14b8a6','#f97316'];
 
 async function load() {
   try {
@@ -240,7 +238,7 @@ async function load() {
 
     const container = document.getElementById('dataset-cards');
     if (globalDatasets.length === 0) {
-      container.innerHTML = '<p style="color:var(--muted);font-size:13px">No completed datasets yet. Process one from the Admin panel first.</p>';
+      container.innerHTML = '<p style="color:var(--muted);font-size:14px">No completed datasets yet. Process one from the Admin panel first.</p>';
       return;
     }
     container.innerHTML = `<div class="dataset-grid">${globalDatasets.map(d=>`
@@ -353,10 +351,10 @@ async function showDetail(id) {
 
     document.getElementById('detail-table').innerHTML = detections.map(d=>`
       <tr>
-        <td style="font-family:monospace;font-size:12px">${d.column}</td>
-        <td><span style="background:#faf5ff;color:#6d28d9;border:1px solid #ddd6fe;border-radius:20px;padding:2px 8px;font-size:11px;font-weight:600">${d.pii_type}</span></td>
-        <td><span style="background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0;border-radius:20px;padding:2px 8px;font-size:11px;font-weight:600">${d.method}</span></td>
-        <td style="font-weight:600;color:#7c3aed">${(d.count||0).toLocaleString()}</td>
+        <td style="font-family:monospace;font-size:13px">${d.column}</td>
+        <td><span style="background:#fdf2f4;color:#90243f;border:1px solid #f7d6dc;border-radius:20px;padding:3px 10px;font-size:12px;font-weight:600">${d.pii_type}</span></td>
+        <td><span style="background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px;font-size:12px;font-weight:600">${d.method}</span></td>
+        <td style="font-weight:600;color:#90243f">${(d.count||0).toLocaleString()}</td>
         <td><span style="color:#10b981;font-weight:600">Protected</span></td>
       </tr>`).join('');
 
