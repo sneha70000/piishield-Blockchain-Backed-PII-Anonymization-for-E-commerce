@@ -669,3 +669,38 @@ def admin_ping(current_key: auth.ApiKey = Depends(auth.require_api_key)):
         "message": f"Authenticated as '{current_key.name}' (role: {current_key.role})",
         "last_used_at": current_key.last_used_at.isoformat() if current_key.last_used_at else None,
     }
+
+
+# ── Per-dataset analytics (anonymised output only) ──────────────────────────
+@app.get("/api/analytics/{dataset_id}")
+def dataset_analytics(dataset_id: int, request: Request, db: Session = Depends(get_db)):
+    import pandas as pd
+    ds = db.query(Dataset).filter(Dataset.id == dataset_id).first()
+    if not ds:
+        raise HTTPException(404, "Dataset not found.")
+    if (ds.company or "default").lower() != _get_company_from_request(request, db).lower():
+        raise HTTPException(403, "Access denied.")
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "outputs", f"anonymised_{dataset_id}.csv")
+    if not os.path.exists(path):
+        raise HTTPException(404, "Anonymised file not found for this dataset.")
+    df = pd.read_csv(path, nrows=200000, low_memory=False)
+    out = []
+    for col in df.columns:
+        s = df[col].dropna()
+        if s.empty:
+            continue
+        if pd.api.types.is_numeric_dtype(s):
+            if s.nunique() <= 1:
+                continue
+            counts, edges = pd.cut(s, bins=8, retbins=True)[0].value_counts(sort=False), None
+            labels = [f"{iv.left:.4g}–{iv.right:.4g}" for iv in counts.index]
+            out.append({"name": col, "kind": "numeric", "labels": labels, "values": [int(v) for v in counts.values]})
+        else:
+            st = s.astype(str)
+            if st.str.contains(r"\*{3,}|^[0-9a-f]{32,}$|^tok_", regex=True).any():
+                continue
+            if st.nunique() > 12:
+                continue
+            vc = st.value_counts().head(12)
+            out.append({"name": col, "kind": "category", "labels": list(vc.index), "values": [int(v) for v in vc.values]})
+    return {"dataset_id": dataset_id, "rows": int(len(df)), "columns": out[:8]}

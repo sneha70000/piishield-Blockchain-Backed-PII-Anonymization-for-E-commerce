@@ -130,6 +130,8 @@
     </button>
 
     <div class="summary-box" id="detail-summary"></div>
+    <div class="card"><div class="card-title">Insights from this anonymised dataset</div>
+      <div id="insights" class="chart-grid"></div></div>
 
     <div class="chart-grid">
       <div class="chart-card">
@@ -164,8 +166,8 @@
 </div>
 
 <script>
-const API = 'http://172.28.236.73:8000/api';
-if (sessionStorage.getItem('piishield_authenticated') !== 'true') window.location.href = 'login.html';
+const API = 'http://localhost:8000/api';
+if (!sessionStorage.getItem('piishield_token')) window.location.href = 'login.html';
 document.getElementById('user-name').textContent = sessionStorage.getItem('piishield_user') || 'Data Scientist';
 const TOKEN = sessionStorage.getItem('piishield_token') || '';
 
@@ -296,6 +298,7 @@ async function showDetail(id) {
     </p>`;
 
   try {
+    loadInsights(id);
     const result = await api(`/results/${id}`);
     const detections = result.detections || [];
 
@@ -363,10 +366,31 @@ async function showDetail(id) {
   }
 }
 
+async function loadInsights(id) {
+  const box = document.getElementById('insights');
+  Object.keys(chartInstances).filter(k=>k.startsWith('ins_')).forEach(destroyChart);
+  box.innerHTML = '<span class="loader"></span> Loading...';
+  try {
+    const r = await fetch(`${API}/analytics/${id}`, { headers: { 'X-API-Key': TOKEN } });
+    if (!r.ok) { box.innerHTML = '<p style="color:var(--muted)">No analytics available for this dataset.</p>'; return; }
+    const data = await r.json();
+    if (!data.columns.length) { box.innerHTML = '<p style="color:var(--muted)">No non-sensitive columns suitable for charts.</p>'; return; }
+    box.innerHTML = data.columns.map((c,i)=>`<div class="chart-card"><div class="card-title">${c.name}</div><canvas id="ins_${i}"></canvas></div>`).join('');
+    data.columns.forEach((c,i)=>{
+      chartInstances['ins_'+i] = new Chart(document.getElementById('ins_'+i), {
+        type: c.kind === 'numeric' ? 'bar' : (c.labels.length <= 5 ? 'doughnut' : 'bar'),
+        data: { labels: c.labels, datasets: [{ data: c.values, backgroundColor: c.kind==='numeric' ? '#90243f' : COLORS, borderRadius: 4 }] },
+        options: { plugins:{legend:{display: c.kind!=='numeric' && c.labels.length<=5, position:'bottom'}}, responsive:true }
+      });
+    });
+  } catch(e) { box.textContent = 'Could not load insights.'; }
+}
+
 function showOverview() {
   document.getElementById('overview').classList.remove('hidden');
   document.getElementById('detail-view').classList.remove('active');
   ['detailPiiChart','detailMethodChart','sensitiveChart'].forEach(destroyChart);
+  Object.keys(chartInstances).filter(k=>k.startsWith('ins_')).forEach(destroyChart);
 }
 
 load();
