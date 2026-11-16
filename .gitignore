@@ -4,3 +4,7 @@ backend/data/
 backend/uploads/
 __pycache__/
 *.Zone.Identifier
+.env
+*.log
+/data/
+backend/main .py

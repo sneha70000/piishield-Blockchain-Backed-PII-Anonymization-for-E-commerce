@@ -1,3 +1,4 @@
+from sqlmodel import SQLModel, Field
 from sqlalchemy import create_engine, Column, String, Integer, DateTime, Text, JSON, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -96,3 +97,11 @@ def get_db():
 def init_db():
     Base.metadata.create_all(bind=engine)
     print("✅ Database tables created.")
+
+
+class PasswordResetToken(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    user_id: int
+    token: str = Field(unique=True, index=True)
+    expires_at: datetime
+    used: bool = Field(default=False)
