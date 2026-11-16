@@ -399,7 +399,7 @@
 <div class="toast-container" id="toasts"></div>
 
 <script>
-const API = 'http://172.28.236.73:8000/api';
+const API = 'http://localhost:8000/api';
 let currentPage = 'dashboard';
 let datasets = [];
 let stats = {};
@@ -597,7 +597,7 @@ async function renderAudit() {
   try {
     const res = await fetch('http://localhost:4000/blocks');
     const chain = await res.json();
-    const v = await api('/audit/verify');
+    const v = await fetch('http://localhost:4000/verify').then(r=>r.json());
     return `
     <div class="card">
       <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px;padding:18px;background:var(--surface);border-radius:10px;border:1px solid var(--border)">
@@ -853,10 +853,10 @@ function openProcess(id) {
 async function init() {
   await render();
   try {
-    const v = await api('/audit/verify');
+    const v = await fetch('http://localhost:4000/verify').then(r=>r.json());
     const el = document.getElementById('chain-status-sidebar');
     if (el) el.innerHTML = v.valid
-      ? `<span style="color:var(--accent);font-weight:600">Valid &middot; ${v.total_blocks} blocks</span>`
+      ? `<span style="color:var(--accent);font-weight:600">Valid &middot; ${v.totalBlocks || v.total_blocks} blocks</span>`
       : `<span style="color:var(--red)">Integrity failed</span>`;
   } catch {}
 }

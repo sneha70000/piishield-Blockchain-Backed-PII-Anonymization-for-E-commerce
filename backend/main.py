@@ -6,7 +6,7 @@ Endpoints:
   POST /api/anonymise/{id}             — run anonymisation
   GET  /api/results/{id}               — get detection + anonymisation results
   GET  /api/download/{id}              — download anonymised file
-  GET  /api/audit/{id}                 — get blockchain audit log for a dataset
+import blockchain as bc
   GET  /api/audit/verify               — verify chain integrity
   GET  /api/datasets                   — list all datasets
   GET  /api/stats                      — dashboard stats
@@ -17,17 +17,19 @@ Endpoints:
 """
 
 import os
+import requests
 import uuid
 import json
 import shutil
 import pandas as pd
 from datetime import datetime
 from typing import Optional, Dict
-from fastapi import FastAPI, UploadFile, File, HTTPException, Depends, BackgroundTasks, Header
+from fastapi import FastAPI, Request, UploadFile, File, HTTPException, Depends, BackgroundTasks, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from dotenv import load_dotenv
 
 from models import init_db, get_db, Dataset, DetectionResult, AuditLog
@@ -36,10 +38,10 @@ from anonymiser import anonymise_dataframe
 import blockchain as bc
 
 # NEW: report-completion modules
-import auth
-import preprocessing
+import auth as auth
+import preprocessing as preprocessing
 import differential_privacy as dp
-import compliance
+import compliance as compliance
 
 load_dotenv()
 
@@ -48,6 +50,20 @@ OUTPUT_DIR = os.getenv("OUTPUT_DIR", "./data/outputs")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 os.makedirs("./data", exist_ok=True)
+
+
+def _get_company_from_request(request, db):
+    """Get company from X-API-Key token, fallback to default."""
+    try:
+        key = request.headers.get("X-API-Key", "")
+        if key:
+            from auth import _hash_key, ApiKey as AK
+            row = db.query(AK).filter(AK.key_hash == _hash_key(key)).first()
+            if row and row.company:
+                return row.company
+    except:
+        pass
+    return "default"
 
 app = FastAPI(
     title="PIIShield API",
@@ -95,6 +111,7 @@ def _save_output(df: pd.DataFrame, original_path: str, dataset_id: int) -> str:
 
 
 def _optional_api_key(x_api_key: str = Header(None, alias="X-API-Key"), db: Session = Depends(get_db)):
+    return None  # Auth disabled — open access
     """
     Non-blocking auth check: if a key is supplied, it's validated and logged.
     If no key is supplied, the request proceeds anyway (so your existing
@@ -111,7 +128,8 @@ def _get_owned_dataset(dataset_id: int, caller: auth.ApiKey, db: Session) -> Dat
     dataset = db.query(Dataset).filter(Dataset.id == dataset_id).first()
     if not dataset:
         raise HTTPException(404, "Dataset not found.")
-    if dataset.company != "default":
+    _co = (getattr(caller, "company", None) or "default")
+    if (dataset.company or "default").lower() != _co.lower():
         raise HTTPException(403, "This dataset does not belong to your company.")
     return dataset
 
@@ -177,42 +195,40 @@ def login(body: LoginRequest, db: Session = Depends(get_db)):
 
 
 @app.get("/api/stats")
-def get_stats(
-    caller: auth.ApiKey = Depends(auth.require_api_key), 
-    db: Session = Depends(get_db)
-):
-    company_datasets = db.query(Dataset).filter(Dataset.company == caller.company)
-    total = company_datasets.count()
-    completed = company_datasets.filter(Dataset.status == "completed").count()
-    
+def get_stats(request: Request, db: Session = Depends(get_db)):
+    caller_company = _get_company_from_request(request, db)
+    q = db.query(Dataset).filter(func.lower(Dataset.company) == caller_company.lower())
+    total = q.count()
+    completed = q.filter(Dataset.status == "completed").count()
     total_pii = db.query(DetectionResult).join(
         Dataset, DetectionResult.dataset_id == Dataset.id
-    ).filter(Dataset.company == caller.company).count()
+    ).filter(func.lower(Dataset.company) == caller_company.lower()).count()
     
-    # Filter blockchain stats for this company
-    company_dataset_ids = {d.id for d in company_datasets.all()}
     chain_data = bc.verify_chain()
-    company_blocks = [
-        b for b in chain_data.get("chain", []) 
-        if b.get("index") == 0 or b.get("dataset_id") in company_dataset_ids
-    ]
+    all_chain = chain_data.get("chain", [])
+    company_datasets = db.query(Dataset.id).filter(func.lower(Dataset.company) == caller_company.lower()).all()
+    company_dataset_ids = {int(d[0]) for d in company_datasets}
+    
+    company_blocks = all_chain
     
     return {
         "total_datasets": total,
         "completed": completed,
         "total_pii_detections": total_pii,
         "blockchain_valid": chain_data.get("valid", False),
-        "total_blocks": len(company_blocks),
+        "total_blocks": chain_data.get("total_blocks", 0),
     }
 
+
 @app.get("/api/datasets")
-def list_datasets(
-    caller: auth.ApiKey = Depends(auth.require_api_key), 
+def list_datasets( 
+    request: Request,
     db: Session = Depends(get_db)
 ):
     # Strictly filter by the caller's company
+    caller_company = _get_company_from_request(request, db)
     datasets = db.query(Dataset).filter(
-        Dataset.company == caller.company
+        func.lower(Dataset.company) == caller_company.lower()
     ).order_by(Dataset.uploaded_at.desc()).all()
     
     return [
@@ -228,8 +244,8 @@ def list_datasets(
 
 @app.post("/api/upload")
 async def upload_dataset(
+    request: Request,
     file: UploadFile = File(...),
-    caller: auth.ApiKey = Depends(auth.require_api_key),
     db: Session = Depends(get_db),
 ):
     allowed = {".csv", ".json", ".xlsx"}
@@ -256,7 +272,7 @@ async def upload_dataset(
         original_path=save_path,
         total_rows=row_count,
         status="uploaded",
-        company=caller.company,
+        company=_get_company_from_request(request, db),
     )
     db.add(dataset)
     db.commit()
@@ -267,7 +283,7 @@ async def upload_dataset(
         dataset_id=dataset.id,
         payload={
             "filename": file.filename, "rows": row_count, "path": save_path,
-            "uploaded_by": caller.name,
+            "uploaded_by": "admin",
         },
     )
 
@@ -527,13 +543,14 @@ def forgot_reset(body: ForgotR, db: Session = Depends(get_db)):
     
 @app.get("/api/audit/verify")
 def verify_audit(
-    caller: auth.ApiKey = Depends(auth.require_api_key),
+    request: Request,
     db: Session = Depends(get_db)
 ):
     chain_data = bc.verify_chain()
+    caller_company = _get_company_from_request(request, db)
     
     # Get all dataset IDs for this company
-    company_datasets = db.query(Dataset.id).filter(Dataset.company == caller.company).all()
+    company_datasets = db.query(Dataset.id).filter(func.lower(Dataset.company) == caller_company.lower()).all()
     company_dataset_ids = {d[0] for d in company_datasets}
     
     if "chain" in chain_data:
@@ -551,14 +568,14 @@ def verify_audit(
 @app.get("/api/audit/{dataset_id}")
 def get_audit(
     dataset_id: int,
-    caller: auth.ApiKey = Depends(auth.require_api_key),
+    request: Request,
     db: Session = Depends(get_db),
 ):
     dataset = db.query(Dataset).filter(Dataset.id == dataset_id).first()
     if not dataset: 
         raise HTTPException(404, "Dataset not found.")
     
-    if dataset.company != caller.company:
+    if (dataset.company or "default").lower() != _get_company_from_request(request, db).lower():
         raise HTTPException(403, "Access denied.")
         
     chain = bc.get_chain(dataset_id=dataset_id)
